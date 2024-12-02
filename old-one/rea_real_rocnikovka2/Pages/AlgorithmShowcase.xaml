@@ -1,0 +1,45 @@
+﻿<Page x:Class="rea_real_rocnikovka2.AlgorithmShowcase"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:rea_real_rocnikovka2"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AlgorithmShowcase">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <Canvas x:Name="BarCanvas" Grid.Column="0" Margin="10" Background="#2c2c2c" SizeChanged="OnSizeChange"/>
+        
+
+        <StackPanel x:Name="ControlPanel" Grid.Column="1" VerticalAlignment="Stretch" Margin="20">
+            <TextBlock Text="Sorting Options" FontSize="20" FontWeight="Bold" Foreground="White" />
+
+            <ComboBox x:Name="AlgorithmComboBox" 
+              ItemsSource="{Binding AlgorithmOptions}" 
+              SelectedItem="{Binding SelectedAlgorithm}"  Padding="10, 5" Margin="0, 10, 0, 0"
+             />
+
+            <Button Content="Run"  Padding="10,5" Margin="10" Click="RunButton_Click"/>
+
+
+            <Slider x:Name="SpeedSlider" Minimum="1" Maximum="2000" Value="100" Margin="0, 20, 0, 0"  IsSnapToTickEnabled="True" TickFrequency="1" SmallChange="10" LargeChange="50"/>
+            <TextBlock x:Name="SliderValueLabel" Text="{Binding ElementName=SpeedSlider, Path=Value, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0} ms' }" FontSize="14" Foreground="White"
+               Margin="3, 0, 0, 0"/>
+            <CheckBox x:Name="SuperSpeed" Content="Super Speed" VerticalAlignment="Top" Foreground="White" HorizontalAlignment="Left" Margin="10,10,0,0" />
+            <Button Content="Scramble"  Padding="10,5" Margin="30, 40" Click="ScrambleButton_Click"/>
+            <Button x:Name="CancelButton" Content="STOP"  Padding="10,5" Margin="30, -35, 30, 10" Click="CancelButton_Click"/>
+            <TextBox x:Name="NumberInput" 
+        PreviewTextInput="NumberInput_PreviewTextInput" 
+        HorizontalAlignment="Center" 
+        VerticalAlignment="Center" 
+        FontSize="16" Width="150" Padding="10, 5" KeyDown="NumberInput_KeyDown" />
+
+        </StackPanel>
+    </Grid>
+</Page>

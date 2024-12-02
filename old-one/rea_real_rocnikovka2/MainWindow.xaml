@@ -1,0 +1,24 @@
+﻿<Window x:Class="rea_real_rocnikovka2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:rea_real_rocnikovka2"
+        mc:Ignorable="d"
+        WindowStyle="SingleBorderWindow"
+        WindowStartupLocation="CenterScreen"
+        Background="#2D2F34"
+        Height="450" Width="800"
+        MinWidth="800" MinHeight="450"
+        >
+    <Grid>
+        <StackPanel Background="#2D2F34" Orientation="Horizontal" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <Button x:Name="FirstButton" Content="AlgorithmShowcase" MinWidth="150" Click="AlgorithmShowcaseBtn_Click"/>
+            <Button Content="Comparison" MinWidth="150" Margin="10,0,0,0" Click="ComparisonBtn_Click"/>
+            <Button Content="Explanation" MinWidth="150" Margin="10,0,0,0" Click="ExplanationBtn_Click"/>
+        </StackPanel>
+        
+        <Frame Panel.ZIndex="-1" x:Name="Main" Margin="0,35,0,0" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>
+
