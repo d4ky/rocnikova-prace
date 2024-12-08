@@ -70,6 +70,7 @@ namespace final_real_real_rocnikovka2.Pages
             IsAutoStepping = false;
             ResetBtn_Click(null, null);
         }
+
         private void InitializeBallObjects(List<int> numbers)
         {
             Draw.UpdateBallRadius(null, numbers.Count, MainCanvas);
@@ -77,7 +78,7 @@ namespace final_real_real_rocnikovka2.Pages
             double yPos = MainCanvas.ActualHeight / 2 - Draw.BallRadius;
             foreach (int number in numbers)
             {
-                Ball newBall = new(MainCanvas, 1, ColorPalette.DefaultFill, ColorPalette.DefaultStroke);
+                Ball newBall = new(MainCanvas, 1, ColorPalette.DefaultFill, ColorPalette.DefaultStroke, 1);
                 newBall.BallText = new(MainCanvas, 1, ColorPalette.TextColor, number.ToString(), 0);
 
                 newBall.SetPosition(xPos, yPos);
@@ -86,24 +87,6 @@ namespace final_real_real_rocnikovka2.Pages
 
                 xPos += 3 * Draw.BallRadius;
             }
-        }
-        private void CanvasSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-
-            Draw.UpdateBallRadius(SelectedAlgorithm, Numbers.Count, MainCanvas);
-            foreach (Ball ball in Balls)
-            {
-                ball.Update(previousCanvasWidth, previousCanvasHeight, previousBallRadius);
-            }
-            foreach (GraphicElement gE in GraphicElements)
-            {
-                gE.Update(previousCanvasWidth, previousCanvasHeight);
-                gE.Update(previousCanvasWidth, previousCanvasHeight, previousBallRadius);
-            }
-            previousCanvasWidth = MainCanvas.ActualWidth;
-            previousCanvasHeight = MainCanvas.ActualHeight;
-            previousBallRadius = Draw.BallRadius;
-
         }
 
         private void PopulateComboBox()
@@ -115,13 +98,26 @@ namespace final_real_real_rocnikovka2.Pages
             }
         }
 
-        private void ResetBtn_Click(object sender, RoutedEventArgs e)
+        private async void ResetBtn_Click(object sender, RoutedEventArgs e)
         {
             GraphicElements.ForEach(gE => gE.Delete());
             GraphicElements.Clear();
-            SelectedAlgorithm?.Reset(Numbers, Balls, GraphicElements);
             Animate.AnimationSkip();
-            Draw.ChangeColorForAll(Balls, ColorPalette.DefaultFill, ColorPalette.DefaultStroke);
+            List<Ball> temp = [];
+            foreach (Ball b in Balls) // linej fix na jeden malinky error =)
+            {
+                Ball newBall = Draw.CloneBall(b);
+                newBall.AddToCanvas();
+                temp.Add(newBall);  
+                b.Delete();
+            }
+            Balls = temp;
+            SelectedAlgorithm?.Reset(Numbers, Balls, GraphicElements);
+            if (SelectedAlgorithm == (SortingAlgorithm)AlgorithmComboBox.SelectedItem)
+                SelectedAlgorithm?.OnSelect(Numbers, Balls);
+            Draw.ChangeColorForAll(Balls, ColorPalette.DefaultFill, ColorPalette.DefaultStroke, false);
+            AutoStepButton.Content = "Auto Step: OFF";
+            AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
             IsAutoStepping = false;
         }
 
@@ -132,16 +128,20 @@ namespace final_real_real_rocnikovka2.Pages
             Globals.AnimationMs = (int)slider.Value;
         }
 
-        private void OnComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void OnComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ResetBtn_Click(null, null);
+            await Task.Delay(1);
             SelectedAlgorithm = (SortingAlgorithm)AlgorithmComboBox.SelectedItem;
+            Draw.UpdateBallRadius(SelectedAlgorithm, Numbers.Count, MainCanvas);
             SelectedAlgorithm?.Reset(Numbers, Balls, GraphicElements);
+            SelectedAlgorithm?.OnSelect(Numbers, Balls);
         }
 
         private async void StepBtn_Click(object sender, RoutedEventArgs e)
         {
             IsAutoStepping = false;
+            
             await Animate.AnimationSkip();
             SelectedAlgorithm?.Step();
         }
@@ -150,9 +150,16 @@ namespace final_real_real_rocnikovka2.Pages
         {
             if (SelectedAlgorithm == null) return;
             if (!IsAutoStepping)
+            {
                 IsAutoStepping = true;
-            else
+                AutoStepButton.Content = "Auto Step: ON";
+                AutoStepButton.Foreground = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+            } else
+            {
                 IsAutoStepping = false;
+                AutoStepButton.Content = "Auto Step: OFF";
+                AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
+            }
             while (IsAutoStepping)
             {
                 SelectedAlgorithm?.Step();
@@ -161,6 +168,27 @@ namespace final_real_real_rocnikovka2.Pages
                 if (SelectedAlgorithm.IsSortedBool) break;
             }
             IsAutoStepping = false;
+        }
+
+        private void ScrambleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsAutoStepping) return;
+            Random random = new Random();
+            int n = Numbers.Count;
+
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
+                int temp = Numbers[i];
+                Numbers[i] = Numbers[j];
+                Numbers[j] = temp;
+                Ball tempBall = Balls[i];
+                Balls[i] = Balls[j];
+                Balls[j] = tempBall;
+
+                Draw.SwapXPos(Balls[i], Balls[j]);
+            }
+           OnComboBoxSelectionChanged(null, null);
         }
     }
 }

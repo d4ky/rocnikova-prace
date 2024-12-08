@@ -3,6 +3,7 @@ using final_real_real_rocnikovka2.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,33 +19,12 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
     {
         private static TimeSpan AnimationTime => TimeSpan.FromMilliseconds(Globals.AnimationMs);
         private static readonly Storyboard AnimationStoryboard;
-        private static bool isAnimationOngoing;
-        public static bool IsAnimationOngoing => isAnimationOngoing;
-        private static Window currentWindow;
 
         static Animate()
         {
             AnimationStoryboard = new Storyboard();
-            AnimationStoryboard.CurrentStateInvalidated += (s, e) =>
-            {
-                if (s is Clock clock)
-                {
-                    isAnimationOngoing = clock.CurrentState == ClockState.Active;
-                    UpdateResizeMode(isAnimationOngoing);
-                }
-            };
         }
 
-        private static void UpdateResizeMode(bool disableResizing)
-        {
-            if (currentWindow == null) return;
-
-            currentWindow.ResizeMode = disableResizing ? ResizeMode.NoResize : ResizeMode.CanResize;
-        }
-        public static void SetWindow(Window window)
-        {
-            currentWindow = window;
-        }
 
         public static void AnimationRun()
         {
@@ -58,7 +38,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         public static async Task AnimationSkip()
         {
             AnimationStoryboard.SkipToFill();
-            await Task.Delay(1);
+            await Task.Delay(TimeSpan.FromMilliseconds(1));
         }
 
         public static void ScheduleForDeletion(GraphicElement gE)
@@ -97,7 +77,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         {
             ColorAnimation colorAnimation = CreateColorAnimation(
                 gE:             ball,
-                from:           ((SolidColorBrush)((Ellipse)ball.MainUIElement).Stroke).Color,
+                from:           ball.GetStrokeColor(),
                 to:             endColor,
                 duration:       duration,
                 beginTime:      beginTime,
@@ -111,7 +91,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         {
             ColorAnimation colorAnimation = CreateColorAnimation(
                 gE:             ball,
-                from:           ((SolidColorBrush)((Ellipse)ball.MainUIElement).Fill).Color,
+                from:           ball.GetFillColor(),
                 to:             endColor,
                 duration:       duration,
                 beginTime:      beginTime,
@@ -125,7 +105,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         {
             ColorAnimation colorAnimation = CreateColorAnimation(
                 gE:             text,
-                from:           ((SolidColorBrush)((TextBlock)text.MainUIElement).Foreground).Color,
+                from:           text.GetColor(),
                 to:             endColor,
                 duration:       duration,
                 beginTime:      beginTime,
@@ -147,6 +127,43 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
 
             AnimationStoryboard.Children.Add(doubleAnimation);
 
+        }
+
+        public static void MoveGraphicElement(GraphicElement gE, double endX, double endY, double duration, double beginTime)
+        {
+            DoubleAnimation gEVerticalMovement = CreateDoubleAnimation(
+                gE: gE,
+                from: gE.Y,
+                to: endY,
+                duration: duration,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.TopProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation gEHorizontalMovement = CreateDoubleAnimation(
+                gE: gE,
+                from: gE.X,
+                to: endX,
+                duration: duration,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.LeftProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+           
+
+            AnimationStoryboard.Children.Add(gEVerticalMovement);
+            AnimationStoryboard.Children.Add(gEHorizontalMovement);
+
+
+            AnimationStoryboard.Completed += (s, e) =>  // provizorni reseni protoze nevim jak tohle udelat pomoci iterace pro kazdy pri animationrun :(
+            {
+                gE.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                gE.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
+                gE.SetPosition(endX, endY);
+
+                AnimationStoryboard.Completed -= (s, e) => { };
+
+            };
         }
 
         public static void MoveBallWithText(Ball ball, double endX, double endY, double duration, double beginTime)
@@ -191,8 +208,21 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
             AnimationStoryboard.Children.Add(ballHorizontalMovement);
             AnimationStoryboard.Children.Add(textVerticalMovement);
             AnimationStoryboard.Children.Add(textHorizontalMovement);
-        }
+            
+            ballVerticalMovement.Completed += (s, e) =>  // provizorni reseni protoze nevim jak tohle udelat pomoci iterace pro kazdy pri animationrun :(
+            {
+                ball.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                ball.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
 
+                ball.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                ball.BallText.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
+
+                ball.SetPosition(endX, endY);
+
+                ballVerticalMovement.Completed -= (s, e) => { };
+
+            };
+        }
 
         public static void BallSwap(Ball ballA, Ball ballB, double duration, double beginTime, double arcHeight)
         {
@@ -327,23 +357,135 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
             AnimationStoryboard.Completed += (s, e) =>  // provizorni reseni protoze nevim jak tohle udelat pomoci iterace pro kazdy pri animationrun :(
             {
                 ballA.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
-                ballB.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
                 ballA.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
-                ballB.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
-                ballA.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
                 ballB.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                ballB.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
 
                 ballA.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
-                ballB.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
                 ballA.BallText.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
-                ballB.BallText.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
-                ballA.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
                 ballB.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                ballB.BallText.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
 
                 AnimationStoryboard.Completed -= (s, e) => { };
             };
         }
 
+        public static void BallSwapInTree(Ball child, Ball parent, double duration, double beginTime)
+        {
+            /////////////////// BALL ///////////////////
+
+            DoubleAnimation ballAVerticalMovementUp = CreateDoubleAnimation(
+                gE: child,
+                from: child.Y,
+                to: parent.Y,
+                duration: duration / 2,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.TopProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation ballBVerticalMovementDown = CreateDoubleAnimation(
+                gE: parent,
+                from: parent.Y,
+                to: child.Y,
+                duration: duration / 2,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.TopProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation ballAHorizontalMovement = CreateDoubleAnimation(
+                gE: child,
+                from: child.X,
+                to: parent.X,
+                duration: duration,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.LeftProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation ballBHorizontalMovement = CreateDoubleAnimation(
+                gE: parent,
+                from: parent.X,
+                to: child.X,
+                duration: duration,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.LeftProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+          
+
+            /////////////////// TEXT ///////////////////
+
+            DoubleAnimation textAVerticalMovementUp = CreateDoubleAnimation(
+                gE: child.BallText,
+                from: child.BallText.Y,
+                to: parent.Y + Draw.BallRadius - child.BallText.TextHeight/2,
+                duration: duration / 2,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.TopProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation textBVerticalMovementDown = CreateDoubleAnimation(
+                gE: parent.BallText,
+                from: parent.BallText.Y,
+                to: child.Y + Draw.BallRadius - parent.BallText.TextHeight/2,
+                duration: duration / 2,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.TopProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation textAHorizontalMovement = CreateDoubleAnimation(
+                gE: child.BallText,
+                from: child.BallText.X,
+                to: parent.X + Draw.BallRadius - child.BallText.TextWidth / 2,
+                duration: duration,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.LeftProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+            DoubleAnimation textBHorizontalMovement = CreateDoubleAnimation(
+                gE: parent.BallText,
+                from: parent.BallText.X,
+                to: child.X + Draw.BallRadius - parent.BallText.TextWidth / 2,
+                duration: duration,
+                beginTime: beginTime,
+                propertyPath: new PropertyPath(Canvas.LeftProperty),
+                easingFunction: new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+
+
+            /////////////////// BALL ///////////////////
+            AnimationStoryboard.Children.Add(ballAVerticalMovementUp);
+            AnimationStoryboard.Children.Add(ballBVerticalMovementDown);
+            AnimationStoryboard.Children.Add(ballAHorizontalMovement);
+            AnimationStoryboard.Children.Add(ballBHorizontalMovement);
+
+            /////////////////// TEXT ///////////////////
+            AnimationStoryboard.Children.Add(textAVerticalMovementUp);
+            AnimationStoryboard.Children.Add(textBVerticalMovementDown);
+            AnimationStoryboard.Children.Add(textAHorizontalMovement);
+            AnimationStoryboard.Children.Add(textBHorizontalMovement);
+
+            double parentX = parent.X;
+            double parentY = parent.Y;
+
+            double childX = child.X;
+            double childY = child.Y;
+
+            textAHorizontalMovement.Completed += (s, e) =>  // provizorni reseni protoze nevim jak tohle udelat pomoci iterace pro kazdy pri animationrun :(
+            {
+                child.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
+                child.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                parent.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
+                parent.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+
+                child.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                child.BallText.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
+                parent.BallText.MainUIElement.BeginAnimation(Canvas.TopProperty, null);
+                parent.BallText.MainUIElement.BeginAnimation(Canvas.LeftProperty, null);
+
+                child.SetPosition(parentX, parentY);
+                parent.SetPosition(childX, childY);
+                textAHorizontalMovement.Completed -= (s, e) => { };
+            };
+        }
 
 
         private static ColorAnimation CreateColorAnimation(GraphicElement gE, Color from, Color to, double duration, double beginTime, PropertyPath propertyPath)

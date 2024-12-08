@@ -63,8 +63,9 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             }
         }
 
-        private void Measure()
+        public void Measure()
         {
+            this.FontSize =  Draw.BallRadius / 3 * 2;
             MainUIElement.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         }
 
@@ -84,7 +85,7 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             double heightScale = (MainCanvas.ActualHeight / prevHeight);
 
 
-            this.FontSize = Draw.BallRadius / 3 * 2;
+            this.FontSize =  Draw.BallRadius / 3 * 2;
 
             SetPosition(X * widthScale , (Y + prevBallRadius) * heightScale - Draw.BallRadius);
         }
@@ -94,7 +95,12 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         }
         public override void ChangeColor(Color color)
         {
-            throw new NotImplementedException();
+            ((TextBlock)MainUIElement).Foreground = new SolidColorBrush(color);
+        }
+
+        public Color GetColor()
+        {
+            return ((SolidColorBrush)((TextBlock)MainUIElement).Foreground).Color;
         }
     }
 }

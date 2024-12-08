@@ -233,7 +233,30 @@ namespace final_real_real_rocnikovka2.Pages
                     break;
             }
         }
+        private void ScrambleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Globals.EndAnimationIsRunning) return;
+            Random random = new Random();
+            int n = Numbers[0].Count;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
+                
 
+                for (int k = 0; k < Numbers.Length; k++)
+                {
+                    int temp = Numbers[k][i];
+                    Numbers[k][i] = Numbers[k][j];
+                    Numbers[k][j] = temp;
+                    Box tempBox = Boxes[k][i];
+                    Boxes[k][i] = Boxes[k][j];
+                    Boxes[k][j] = tempBox;
+
+                    Draw.SwapXPos(Boxes[k][i], Boxes[k][j]);
+                }
+            }
+            StopBtn_Click(null, null);
+        }
 
     }
 }

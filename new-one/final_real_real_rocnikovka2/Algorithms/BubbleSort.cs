@@ -34,6 +34,8 @@ namespace final_real_real_rocnikovka2.Algorithms
             Numbers = numbers;
             Boxes = boxes;
             N = Numbers.Count;
+            ComparisonCount = 0;
+            SwapCount = 0;
         }
         public override void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements)
         {
@@ -65,12 +67,15 @@ namespace final_real_real_rocnikovka2.Algorithms
 
                     Boxes[j].ChangeColor(ColorPalette.SelectedBarFill);
                     Boxes[j+1].ChangeColor(ColorPalette.SelectedBarFill);
+                    ComparisonCount++;
+                    
                     if (Numbers[j] > Numbers[j + 1])
                     {
                         SwapInList(Numbers, j, j + 1);
                         SwapInList(Boxes, j, j + 1);
 
                         Draw.SwapXPos(Boxes[j], Boxes[j + 1]);
+                        SwapCount++;
                     }
 
                     await Wait(Globals.AnimationMs, j);
@@ -90,22 +95,22 @@ namespace final_real_real_rocnikovka2.Algorithms
                     GreaterThanSymbol?.Delete();
                     if (CurrentIndex > 0)
                     {
-                        Balls[CurrentIndex - 1].ChangeStrokeColor(ColorPalette.DefaultStroke);
+                        Balls[CurrentIndex - 1].SetStrokeColor(ColorPalette.DefaultStroke);
                     } else if (CurrentIndex == 0)
                     {
-                        Balls[N-1].ChangeStrokeColor(ColorPalette.DefaultStroke);
-                        Balls[N - 2]?.ChangeStrokeColor(ColorPalette.DefaultStroke);
+                        Balls[N-1].SetStrokeColor(ColorPalette.DefaultStroke);
+                        Balls[N - 2]?.SetStrokeColor(ColorPalette.DefaultStroke);
                     }
                     Animate.AnimationClear();
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SelectStroke, 0.5, 0);
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex + 1], ColorPalette.SelectStroke, 0.5, 0);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SelectedStroke, 0.5, 0);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex + 1], ColorPalette.SelectedStroke, 0.5, 0);
                     Animate.AnimationRun();
 
                     StepState = 1;
                     break;
                 case 1:
                     GraphicElements.Remove(GreaterThanSymbol);
-                    GreaterThanSymbol = new(Balls[0].MainCanvas, 0, ColorPalette.DefaultFill, ColorPalette.DefaultStroke);
+                    GreaterThanSymbol = new(Balls[0].MainCanvas, 0, ColorPalette.DefaultFill, ColorPalette.DefaultStroke, 1);
                     GreaterThanSymbol.BallText = new(GreaterThanSymbol.MainCanvas, 1, Colors.WhiteSmoke, ">", 0);
                     GreaterThanSymbol.SetPosition((Balls[CurrentIndex].X + Balls[CurrentIndex + 1].X) / 2, Balls[CurrentIndex].Y - 0.05 * Draw.BallRadius);
                     GreaterThanSymbol.AddToCanvas();
@@ -157,6 +162,17 @@ namespace final_real_real_rocnikovka2.Algorithms
                     GreaterThanSymbol?.Delete();
                     Draw.ChangeColorForAll(Balls, ColorPalette.GreenFill, ColorPalette.GreenStroke);
                     break;
+            }
+        }
+
+        public override void OnSelect(List<int> numbers, List<Ball> balls)
+        {
+            double xPos = Draw.BallRadius;
+            double yPos = balls[0].MainCanvas.ActualHeight / 2 - Draw.BallRadius;
+            foreach (Ball ball in balls)
+            {
+                ball.SetPosition(xPos, yPos);
+                xPos += 3 * Draw.BallRadius;
             }
         }
     }

@@ -6,7 +6,7 @@
     <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="#eee" />
     <SolidColorBrush x:Key="ComboBoxDisabledBorderBrush" Color="#888" />
 
-
+    <!-- skidnute ze stackoverflow <3 -->
     <ControlTemplate TargetType="ToggleButton" x:Key="ComboBoxToggleButtonTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -191,5 +191,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
 
 </ResourceDictionary>

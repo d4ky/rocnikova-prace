@@ -2,6 +2,7 @@
 using final_real_real_rocnikovka2.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -21,11 +22,47 @@ namespace final_real_real_rocnikovka2.Algorithms
         protected int N { get; set; }
         protected List<GraphicElement> GraphicElements { get; set; }
         public bool IsSortedBool { get; set; }
+        private int _swapCount;
+        private int _comparisonCount;
+
+        public int SwapCount
+        {
+            get => _swapCount;
+            set
+            {
+                if (_swapCount != value)
+                {
+                    _swapCount = value;
+                    OnPropertyChanged(nameof(SwapCount)); 
+                }
+            }
+        }
+
+        public int ComparisonCount
+        {
+            get => _comparisonCount;
+            set
+            {
+                if (_comparisonCount != value)
+                {
+                    _comparisonCount = value;
+                    OnPropertyChanged(nameof(ComparisonCount)); 
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public abstract void Step();
         public abstract Task Sort();
         public abstract void Reset(List<int> numbers, List<Box> boxes);
         public abstract void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements);
+        public abstract void OnSelect(List<int> numbers, List<Ball> balls);
 
         protected static Task Wait(int delay, int iteratorNumber)
         {
@@ -54,5 +91,8 @@ namespace final_real_real_rocnikovka2.Algorithms
         {
             (list[indexB], list[indexA]) = (list[indexA], list[indexB]);
         }
+
+
+      
     }
 }

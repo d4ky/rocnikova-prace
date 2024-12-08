@@ -14,7 +14,13 @@ namespace final_real_real_rocnikovka2.Utils
         private static int animationMs;
         private static bool multiIsChecked;
         private static bool algorithmIsRunning1;
+        private static bool endAnimationIsRunning;
 
+        public static bool EndAnimationIsRunning
+        {
+            get => endAnimationIsRunning;
+            set => endAnimationIsRunning = value;
+        }
         public static bool Stop
         {
             get => stop;

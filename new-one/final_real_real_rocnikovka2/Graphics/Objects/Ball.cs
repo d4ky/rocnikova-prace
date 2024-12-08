@@ -17,6 +17,7 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
     {
         public Text? BallText { get; set; }
 
+        public double BallRadiusRatio;
         public double Width
         {
             get => ((Ellipse)MainUIElement).Width;
@@ -34,21 +35,22 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             get => ((Ellipse)MainUIElement).StrokeThickness;
             set => ((Ellipse)MainUIElement).StrokeThickness = value;
         }
-        public Ball(Canvas canvas, double opacity, Color color, Color stroke) : base(canvas)
+        public Ball(Canvas canvas, double opacity, Color color, Color stroke, double ballRadiusRatio) : base(canvas)
         {
-            this.MainUIElement = CreateEllipse(opacity, color, stroke);
+            this.MainUIElement = CreateEllipse(opacity, color, stroke, ballRadiusRatio);
+            BallRadiusRatio = ballRadiusRatio;
         }
 
-        private static Ellipse CreateEllipse(Double opacity, Color color, Color stroke)
+        private static Ellipse CreateEllipse(Double opacity, Color color, Color stroke, double ballRadiusRatio)
         {
             return new Ellipse
             {
                 Fill = new SolidColorBrush(color),
                 Stroke = new SolidColorBrush(stroke),
-                Width = Draw.BallRadius * 2,
-                Height = Draw.BallRadius * 2,
+                Width = ballRadiusRatio * Draw.BallRadius * 2,
+                Height = ballRadiusRatio * Draw.BallRadius * 2,
                 Opacity = opacity,
-                StrokeThickness = 0.1 * Draw.BallRadius
+                StrokeThickness = 0.1 * ballRadiusRatio * Draw.BallRadius
 
             };
         }
@@ -63,10 +65,12 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         public override void SetPosition(double x, double y)
         {
             Canvas.SetLeft(this.MainUIElement, (double)x);
-            //MainCanvas.UpdateLayout();
-            double e = Canvas.GetLeft(this.MainUIElement);
             Canvas.SetTop(MainUIElement, y);
+            this.StrokeThickness = 0.1 * Draw.BallRadius * BallRadiusRatio;
 
+            this.Width = 2 * Draw.BallRadius * BallRadiusRatio;
+            this.Height = 2 * Draw.BallRadius * BallRadiusRatio;
+            BallText?.Measure();
             BallText?.SetPosition(x + Draw.BallRadius - BallText.TextWidth / 2, y + Draw.BallRadius - BallText.TextHeight / 2);
         }
 
@@ -76,15 +80,16 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         }
         public override void Update(double prevWidth, double prevHeight, double prevBallRadius)
         {
-            BallText?.Update(prevWidth, prevHeight, prevBallRadius); // tohle jen scaluje font
-            double widthScale = MainCanvas.ActualWidth / prevWidth;
-            double heightScale = MainCanvas.ActualHeight / prevHeight;
+            return;
+            //BallText?.Update(prevWidth, prevHeight, prevBallRadius); // tohle jen scaluje font
+            //double widthScale = MainCanvas.ActualWidth / prevWidth;
+            //double heightScale = MainCanvas.ActualHeight / prevHeight;
 
-            this.StrokeThickness = 0.1 * Draw.BallRadius;
+            //this.StrokeThickness = 0.1 * Draw.BallRadius;
 
-            this.Width = 2 * Draw.BallRadius;
-            this.Height = 2 * Draw.BallRadius;
-            SetPosition(X * widthScale, (Y + prevBallRadius) * heightScale - Draw.BallRadius); // nastavi pozici obojiho
+            //this.Width = 2 * Draw.BallRadius;
+            //this.Height = 2 * Draw.BallRadius;
+            //SetPosition(X * widthScale, (Y + prevBallRadius) * heightScale - Draw.BallRadius); // nastavi pozici obojiho
         }
 
         public override void Delete()
@@ -98,10 +103,18 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         {
             ((Ellipse)MainUIElement).Fill = new SolidColorBrush(color);
         }
-        public void ChangeStrokeColor(Color color)
+        public void SetStrokeColor(Color color)
         {
             ((Ellipse)MainUIElement).Stroke = new SolidColorBrush(color);
         }
 
+        public Color GetStrokeColor()
+        {
+            return ((SolidColorBrush)((Ellipse)MainUIElement).Stroke).Color;
+        }
+        public Color GetFillColor()
+        {
+            return ((SolidColorBrush)((Ellipse)MainUIElement).Fill).Color;
+        }
     }
 }

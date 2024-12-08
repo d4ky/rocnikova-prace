@@ -18,9 +18,11 @@
             <ColumnDefinition Width="280"/>
         </Grid.ColumnDefinitions>
 
-
-
-        <Canvas SizeChanged="CanvasSizeChanged" x:Name="MainCanvas" Background="#2A2A2A" Grid.Column="0" Margin="5, 5, 0, 5" Grid.Row="0"/>
+        <Border Background="#2A2A2A" Grid.Row="0" Grid.Column="0" Margin="5,5,0,5">
+            <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="0" Margin="5, 5, 0, 5">
+                <Canvas Width="16" Height="9" x:Name="MainCanvas" Background="#2A2A2A" Grid.Column="0"  Grid.Row="0"/>
+            </Viewbox>
+        </Border>
         <Border Background="#2E2E2E" Grid.Column="1" Grid.Row="0" Margin="5" VerticalAlignment="Stretch">
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                 <TextBlock Text="Settings" FontSize="24" FontWeight="Bold" 
@@ -45,12 +47,13 @@
                     <Button Click="ResetBtn_Click" Content="Reset" Width="75" Background="#4C4C4C" Foreground="#FFFFFF" BorderBrush="#5C5C5C" BorderThickness="1" Height="30"/>
                 </StackPanel>
 
-                <Button x:Name="AutoStepToggleButton" Content="Auto Step" 
+                <Button x:Name="AutoStepButton" Content="Auto Step: OFF" 
                               Margin="0,0,0,15" Width="160" Background="#4C4C4C"
-                              Foreground="#FFFFFF" BorderBrush="#5C5C5C"
+                              Foreground="Red" BorderBrush="#5C5C5C"
                               BorderThickness="1" Height="30" Click="AutoStepBtn_Click"/>
                 
-                <Button Content="Scramble" Width="160" Margin="0,0,0,15" Background="#4C4C4C" Foreground="#FFFFFF" BorderBrush="#5C5C5C" BorderThickness="1" Height="30"/>
+                <Button Content="Scramble" Width="160" Margin="0,0,0,15" Background="#4C4C4C" Foreground="#FFFFFF" BorderBrush="#5C5C5C" BorderThickness="1" Height="30" 
+                        Click="ScrambleBtn_Click"/>
             </StackPanel>
         </Border>
     </Grid>

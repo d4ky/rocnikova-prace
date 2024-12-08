@@ -29,6 +29,8 @@ namespace final_real_real_rocnikovka2.Algorithms
         {
             Numbers = numbers;
             Boxes = boxes;
+            ComparisonCount = 0;
+            SwapCount = 0;
         }
         public override void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements)
         {
@@ -64,7 +66,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Boxes[j].ChangeColor(ColorPalette.SelectedBarFill);
                     
                     await Wait(Globals.AnimationMs, j);
-
+                    ComparisonCount++;
                     if (Numbers[j] < Numbers[minNumberIndex])
                     {
                         if (minNumberIndex != i)
@@ -83,6 +85,7 @@ namespace final_real_real_rocnikovka2.Algorithms
 
                 if (minNumberIndex != i)
                 {
+                    SwapCount++;
                     SwapInList(Numbers, i, minNumberIndex);
                     SwapInList(Boxes, i, minNumberIndex);
 
@@ -102,7 +105,7 @@ namespace final_real_real_rocnikovka2.Algorithms
             {
                 case 0:
                     Animate.AnimationClear();
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SelectStroke, 0.2, 0);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SelectedStroke, 0.2, 0);
                     Animate.AnimationRun();
                     MinIndex = CurrentIndex;
                     ComparisonIndex = CurrentIndex + 1;
@@ -114,7 +117,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     if (LastMinIndex >= 0)
                         Animate.BallStrokeColorChange(Balls[LastMinIndex], ColorPalette.DefaultStroke, 0.2, 0);
                     if (ComparisonIndex < N)
-                        Animate.BallStrokeColorChange(Balls[ComparisonIndex], ColorPalette.SelectStroke, 0.2, 0);
+                        Animate.BallStrokeColorChange(Balls[ComparisonIndex], ColorPalette.SelectedStroke, 0.2, 0);
                     Animate.BallStrokeColorChange(Balls[ComparisonIndex - 1], ColorPalette.DefaultStroke, 0.2, 0);
                     Animate.BallStrokeColorChange(Balls[MinIndex], ColorPalette.SoftBlueStroke, 0.2, 0);
                     if (ComparisonIndex < N)
@@ -154,6 +157,17 @@ namespace final_real_real_rocnikovka2.Algorithms
                     LastMinIndex = -1;
                     Animate.AnimationRun();
                     break;
+            }
+        }
+
+        public override void OnSelect(List<int> numbers, List<Ball> balls)
+        {
+            double xPos = Draw.BallRadius;
+            double yPos = balls[0].MainCanvas.ActualHeight / 2 - Draw.BallRadius;
+            foreach (Ball ball in Balls)
+            {
+                ball.SetPosition(xPos, yPos);
+                xPos += 3 * Draw.BallRadius;
             }
         }
     }

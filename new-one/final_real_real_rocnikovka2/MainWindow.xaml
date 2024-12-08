@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:final_real_real_rocnikovka2"
         mc:Ignorable="d"
         Title="Sorting Algorithms" Height="700" Width="1300" 
-        MinHeight="700" MinWidth="1300"
-        MaxHeight="1080" MaxWidth="1920" 
+        MinHeight="500" MinWidth="800"
         Background="#2D2F34">
     <Window.Resources>
         <Style x:Key="SelectableButtonStyle" TargetType="Button">

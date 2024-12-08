@@ -43,7 +43,6 @@ namespace final_real_real_rocnikovka2
                 { typeof(MergeSort), 4 },
                 { typeof(QuickSort), 5 }
             };
-            Animate.SetWindow(this);
             sortingAlgorithms = _algorithmLoader.LoadAlgorithms();
 
             sortingAlgorithms = sortingAlgorithms

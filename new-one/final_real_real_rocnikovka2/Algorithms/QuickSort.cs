@@ -24,6 +24,8 @@ namespace final_real_real_rocnikovka2.Algorithms
         {
             Numbers = numbers;
             Boxes = boxes;
+            ComparisonCount = 0;
+            SwapCount = 0;
         }
         public override void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements)
         {
@@ -67,9 +69,11 @@ namespace final_real_real_rocnikovka2.Algorithms
             for (int j = left; j < right; j++)
             {
                 if (Globals.Stop) return 0;
+                ComparisonCount++;
                 if (Numbers[j] < pivot)
                 {
                     i++;
+                    SwapCount++;
                     SwapInList(Numbers, i, j);
                     SwapInList(Boxes, i, j);
                     Draw.SwapXPos(Boxes[i], Boxes[j]);
@@ -86,7 +90,7 @@ namespace final_real_real_rocnikovka2.Algorithms
             }
 
             Boxes[right].ChangeColor(ColorPalette.DefaultBarFill);
-
+            SwapCount++;
             SwapInList(Numbers, i + 1, right);
             SwapInList(Boxes, i + 1, right);
             Draw.SwapXPos(Boxes[i + 1], Boxes[right]);
@@ -97,6 +101,17 @@ namespace final_real_real_rocnikovka2.Algorithms
         public override void Step()
         {
             throw new NotImplementedException();
+        }
+
+        public override void OnSelect(List<int> numbers, List<Ball> balls)
+        {
+            double xPos = Draw.BallRadius;
+            double yPos = balls[0].MainCanvas.ActualHeight / 2 - Draw.BallRadius;
+            foreach (Ball ball in Balls)
+            {
+                ball.SetPosition(xPos, yPos);
+                xPos += 3 * Draw.BallRadius;
+            }
         }
     }
 }

@@ -21,9 +21,9 @@ namespace final_real_real_rocnikovka2.Utils
         public static readonly Color GreenStroke = Color.FromRgb(54, 144, 92);
 
         public static readonly Color GreyFill = Color.FromRgb(60, 60, 60);
-        public static readonly Color GreyStroke = Color.FromRgb(180, 180, 180);
+        public static readonly Color GreyStroke = Color.FromRgb(120, 120, 120);
 
-        public static readonly Color SelectStroke = Color.FromRgb(255, 210, 100);
+        public static readonly Color SelectedStroke = Color.FromRgb(255, 210, 100);
         public static readonly Color MinStroke = Color.FromRgb(86, 157, 216);
         public static readonly Color SoftBlueStroke = Color.FromRgb(100, 150, 255);
 

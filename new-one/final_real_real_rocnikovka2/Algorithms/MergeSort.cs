@@ -26,6 +26,8 @@ namespace final_real_real_rocnikovka2.Algorithms
         {
             Numbers = numbers;
             Boxes = boxes;
+            ComparisonCount = 0;
+            SwapCount = 0;
         }
         public override void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements)
         {
@@ -53,7 +55,6 @@ namespace final_real_real_rocnikovka2.Algorithms
         {
             if (Globals.Stop) return;
             if (left >= right) return;
-
             int mid = left + (right - left) / 2;
 
             await MergeSortRecursion(left, mid);
@@ -64,12 +65,13 @@ namespace final_real_real_rocnikovka2.Algorithms
         private async Task Merge(int left, int mid, int right)
         {
             int firstRight = mid + 1;
-
+            ComparisonCount++;
             if (Numbers[mid] <= Numbers[firstRight]) return;
 
             while (left <= mid && firstRight <= right)
             {
                 if (Globals.Stop) return;
+                ComparisonCount++;
                 if (Numbers[left] <= Numbers[firstRight])
                 {
                     left++;
@@ -80,6 +82,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     
                     while (index > left) // Takhle komplkovane to delam jen kvuli vykresu, jinak by to bylo lehci
                     {
+                        SwapCount++;
                         if (Globals.Stop) return;
                         SwapInList(Numbers, index, index - 1);
                         SwapInList(Boxes, index, index - 1);
@@ -107,6 +110,17 @@ namespace final_real_real_rocnikovka2.Algorithms
         public override void Step()
         {
             throw new NotImplementedException();
+        }
+
+        public override void OnSelect(List<int> numbers, List<Ball> balls)
+        {
+            double xPos = Draw.BallRadius;
+            double yPos = balls[0].MainCanvas.ActualHeight / 2 - Draw.BallRadius;
+            foreach (Ball ball in Balls)
+            {
+                ball.SetPosition(xPos, yPos);
+                xPos += 3 * Draw.BallRadius;
+            }
         }
     }
 }

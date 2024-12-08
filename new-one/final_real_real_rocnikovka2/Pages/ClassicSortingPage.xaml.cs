@@ -4,6 +4,7 @@ using final_real_real_rocnikovka2.Graphics.Rendering;
 using final_real_real_rocnikovka2.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,21 +35,34 @@ namespace final_real_real_rocnikovka2.Pages
         private bool FirstLoad;
 
         private readonly List<SortingAlgorithm> SortingAlgorithms;
-        private SortingAlgorithm? SelectedAlgorithm { get; set; }
+        public SortingAlgorithm? SelectedAlgorithm { get; set; }
         private List<int> Numbers { get; set; }
         private List<Box> Boxes { get; set; }
 
+
+        private SortingAlgorithm _runningAlgorithm;
+
+
+        
         public ClassicSortingPage(List<SortingAlgorithm> sortingAlgorithms)
         {
             InitializeComponent();
             this.SortingAlgorithms = sortingAlgorithms;
             PopulateComboBox();
-
             Numbers = [5, 47, 98, 70, 74, 25, 81, 57, 13, 100, 84, 61, 11, 73, 75, 2, 48, 23, 17, 54, 22, 56, 19, 97, 79, 77, 38, 55, 26, 40, 45, 67, 24, 95, 94, 8, 33, 1, 30, 16, 28, 4, 50, 34, 12, 66, 52, 27, 59, 63, 82, 58, 65, 92, 10, 7, 78, 15, 44, 46, 91, 41, 6, 21, 85, 31, 14, 86, 80, 69, 20, 43, 71, 35, 42, 36, 72, 51, 96, 29, 64, 39, 53, 88, 90, 89, 9, 3, 62, 18, 99, 32, 37, 93, 83, 76, 68, 60, 49, 87];
             Boxes = [];
+            SwapCountTextBlock.Text = $"Swap Count: 0";
+            ComparisonCountTextBlock.Text = $"Comparison count: 0";
             FirstLoad = true;
+            SpeedText.Text = $"{(int)SpeedSlider.Value} ms";
+            DataContext = this;
         }
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             if (FirstLoad)
@@ -105,7 +119,7 @@ namespace final_real_real_rocnikovka2.Pages
                 AlgorithmComboBox.Items.Add(algorithm);
             }
         }
-        
+
 
         private void OnComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -118,18 +132,79 @@ namespace final_real_real_rocnikovka2.Pages
             Globals.Stop = false;
             if (!Globals.AlgorithmIsRunning || Globals.MultiIsChecked)
             {
+                _runningAlgorithm = SelectedAlgorithm;
                 Globals.AlgorithmIsRunning = true;
+
+                SelectedAlgorithm.PropertyChanged += OnAlgorithmStatsChanged;
 
                 SelectedAlgorithm.Reset(Numbers, Boxes);
                 await SelectedAlgorithm.Sort();
 
+                SelectedAlgorithm.PropertyChanged -= OnAlgorithmStatsChanged;
+
                 Globals.AlgorithmIsRunning = false;
             } 
         }
-
+        private void OnAlgorithmStatsChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender == _runningAlgorithm)
+            {
+                SwapCountTextBlock.Text = $"Swap Count: {_runningAlgorithm.SwapCount.ToString()}";
+                ComparisonCountTextBlock.Text = $"Comparison count: {_runningAlgorithm.ComparisonCount.ToString()}";
+            }
+        }
         private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Globals.AnimationMs = (int)SpeedSlider.Value;
+
+            if (SpeedText == null) return;
+
+            if (Globals.AnimationMs >= 15)
+            {
+                SpeedText.Inlines.Clear();
+                SpeedText.Text = $"{Globals.AnimationMs} ms";
+                return;
+            }
+
+            if (Globals.MultiIsChecked)
+            {
+                SpeedText.Inlines.Clear();
+                SpeedText.Inlines.Add(new Run("1 ms ("));
+
+
+                Run redRun = new Run("multi is checked")
+                {
+                    Foreground = new SolidColorBrush(Colors.Red)
+                };
+                SpeedText.Inlines.Add(redRun);
+
+                SpeedText.Inlines.Add(new Run(")"));
+
+                return;
+            }
+            string text = "Super fast!";
+            int maxValue = 15;
+
+            SpeedText.Inlines.Clear();
+
+            double greenness = 1 - (Globals.AnimationMs / (double)maxValue);
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                Color color = Color.FromRgb(
+                    (byte)(255 * (1 - greenness)),
+                    255,
+                    (byte)(255 * (1 - greenness)) 
+                );
+
+                Run run = new Run(text[i].ToString())
+                {
+                    Foreground = new SolidColorBrush(color)
+                };
+
+                SpeedText.Inlines.Add(run);
+            }
+
         }
 
         private void StopBtn_Click(Object sender, RoutedEventArgs e)
@@ -145,6 +220,7 @@ namespace final_real_real_rocnikovka2.Pages
         {
             Globals.MultiIsChecked = false;
             Globals.Stop = true;
+            SpeedSlider_ValueChanged(null, null);
             if (SelectedAlgorithm == null) return;
             if (!SelectedAlgorithm.IsSorted())
                 Draw.ChangeColorForAll(Boxes, ColorPalette.DefaultBarFill);
@@ -153,6 +229,28 @@ namespace final_real_real_rocnikovka2.Pages
         private void CheckBoxChecked(object sender, RoutedEventArgs e)
         {
             Globals.MultiIsChecked = true; 
+            SpeedSlider_ValueChanged(null, null);
+        }
+
+        private void ScrambleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Globals.EndAnimationIsRunning) return;
+            Random random = new Random();
+            int n = Numbers.Count;
+
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
+                int temp = Numbers[i];
+                Numbers[i] = Numbers[j];
+                Numbers[j] = temp;
+                Box tempBox = Boxes[i];
+                Boxes[i] = Boxes[j];
+                Boxes[j] = tempBox;
+
+                Draw.SwapXPos(Boxes[i], Boxes[j]);
+            }
+            StopBtn_Click(null, null );
         }
     }
 }

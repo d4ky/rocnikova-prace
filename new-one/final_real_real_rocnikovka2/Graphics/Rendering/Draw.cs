@@ -1,5 +1,6 @@
 ﻿using final_real_real_rocnikovka2.Algorithms;
 using final_real_real_rocnikovka2.Graphics.Objects;
+using final_real_real_rocnikovka2.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +14,22 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
 {
     public static class Draw
     {
-        private static double _ballRadius;
-
+        private static double ballRadius;
+        public static double VerticalGap = 2;
         public static double BallRadius
         {
-            get => _ballRadius;
-            private set => _ballRadius = value;
+            get => ballRadius;
+            private set => ballRadius = value;
         }
-
         public static void UpdateBallRadius(SortingAlgorithm? sortingAlgorithm, int n, Canvas canvas)
         {
             if (sortingAlgorithm == null || sortingAlgorithm is BubbleSort || sortingAlgorithm is SelectionSort || sortingAlgorithm is InsertionSort)
             {
                 BallRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / 6);
+            }
+            else if(sortingAlgorithm is HeapSort)
+            {
+                BallRadius = Math.Min(canvas.ActualWidth / ((3 * 2 * Math.Pow(2, Math.Ceiling(Math.Log2(n + 1)) - 1)) + 1), canvas.ActualHeight / (2 * Math.Ceiling(Math.Log2(n + 1)) + 2 + VerticalGap * (Math.Ceiling(Math.Log2(n + 1)) + 2)));
             }
         }
 
@@ -39,19 +43,22 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
 
         public static async void DrawDone(IEnumerable<GraphicElement> listGE, Color color)
         {
+            Globals.EndAnimationIsRunning = true;
             foreach (GraphicElement gE in listGE)
             {
                 gE.ChangeColor(color);
                 await Task.Delay(1);
             }
+            Globals.EndAnimationIsRunning = false;
         }
-        public static async void ChangeColorForAll(IEnumerable<Ball> listGE, Color fillColor, Color strokeColor)
+        public static async void ChangeColorForAll(IEnumerable<Ball> listGE, Color fillColor, Color strokeColor, bool withDelay = true)
         {
             foreach (Ball gE in listGE)
             {
                 gE.ChangeColor(fillColor);
-                gE.ChangeStrokeColor(strokeColor);
-                await Task.Delay(1);
+                gE.SetStrokeColor(strokeColor);
+
+                if (withDelay) await Task.Delay(1);
             }
         }
 
@@ -63,6 +70,20 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
             }
         }
 
+        public static Ball CloneBall(Ball ball, Color fill, Color stroke)
+        {
+            Ball newBall = new(ball.MainCanvas, 1, fill, stroke, ball.BallRadiusRatio);
+            newBall.BallText = new(ball.MainCanvas, 1, ((SolidColorBrush)((TextBlock)ball.BallText.MainUIElement).Foreground).Color, ((TextBlock)ball.BallText.MainUIElement).Text, 0);
+            newBall.SetPosition(ball.X, ball.Y);
+            return newBall;
+        }
+        public static Ball CloneBall(Ball ball)
+        {
+            Ball newBall = new(ball.MainCanvas, 1, ball.GetFillColor(), ball.GetStrokeColor(), ball.BallRadiusRatio);
+            newBall.BallText = new(ball.MainCanvas, 1, ball.BallText.GetColor(), ((TextBlock)ball.BallText.MainUIElement).Text, 0);
+            newBall.SetPosition(ball.X, ball.Y);
+            return newBall;
+        }
 
 
     }
