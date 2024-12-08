@@ -2,22 +2,21 @@
 
 ## Složky:
 
-- **`old-one`**: Obsahuje mou první špatnou experimentální implementaci této aplikace (má první práce s WPF). Tento program má funkční animace pro **Heap Sort** a **Merge Sort**.
+- **`old-one`**: Obsahuje mou první špatnou experimentální implementaci této aplikace (má první práce s WPF). Tento program má funkční animaci pro **Merge Sort**.
 - **`new-one`**: Obsahuje snad lepší implementaci s lepším objektovým návrhem aplikace.
 
-## Upozornění
-Při zobrazování heap stepping algoritmu ve starém projektu je moment, kdy se dostaví strom a spouští se delší animace. V tento moment se nesmí znova kliknout step dokud animace nedojede (to je problém jen ve staré implementaci, v nové už to mám snad pořešené dopředu).
+
 ## TODO:
 
-1. **Heap Sort, Merge Sort a Quick Sort learn animace**: Plánuji přidat animace pro všechny tři algoritmy.
+1. **~~Heap Sort~~, Merge Sort a Quick Sort learn animace**: Plánuji přidat animace pro všechny tři algoritmy.
 
-2. **Vizualizace a statistiky**:
-   - Ve složce `visualize` přidám obdélník vlevo nahoře, který bude zobrazovat:
-     - Počet **porovnání**, **lookupů** a **swapů**.
+2. ~~**Vizualizace a statistiky**~~:
+   - ~~Ve složce `visualize` přidám obdélník vlevo nahoře, který bude zobrazovat~~:
+     - ~~Počet **porovnání**, **lookupů** a **swapů**~~.
      - Velikost pole.
 
-3. **Funckionalita tlačítka** `scramble`:
-   - Tlačítko, které **rozhodí** náhodně zadaná čísla.
+3.~~**Funckionalita tlačítka** `scramble`~~:
+   - ~~Tlačítko, které **rozhodí** náhodně zadaná čísla~~.
 
 4. **Možnost vlastního inputu**:
    - Uživatel bude moci **vytvořit vlastní vstup**:
@@ -30,14 +29,14 @@ Při zobrazování heap stepping algoritmu ve starém projektu je moment, kdy se
 6. **Ikonka u výběru algoritmu**:
    - Někam přidám malou ikonku, která bude po najetí vysvětlovat algoritmus slovně a obsahovat informace o **časové** a **paměťové složitosti**.
 
-7. **Úprava textu pod "Animation Delay" v `Visualizze`**:
-   - Když uživatel nastaví hodnotu pod 15ms, změním zobrazení, aby bylo jasné, že snížení zpoždění už není **lineární**, ale **rychlejší** (nebude to už ukazovat v milisekundách).
+7. ~~**Úprava textu pod "Animation Delay" v `Visualizze`**~~:
+   - ~~Když uživatel nastaví hodnotu pod 15ms, změním zobrazení, aby bylo jasné, že snížení zpoždění už není **lineární**, ale **rychlejší** (nebude to už ukazovat v milisekundách)~~.
 
 8. **Úprava hover efektu**:
    - Až se dozvím jak, tak chci odstranit **hover efekt**, který způsobuje, že se tlačítka rozsvítí modře při najetí myší (už mě fakt nebaví)
 
-9. **Auto Step Button**:
-   - Upravím tlačítko **Auto Step**, aby jasně ukázalo, zda je zapnuté nebo vypnuté.
+9. ~~**Auto Step Button**~~:
+   - ~~Upravím tlačítko **Auto Step**, aby jasně ukázalo, zda je zapnuté nebo vypnuté~~.
 
 10. **Přepis Settings na Menu**:
     - Přejmenuji **Settings** na **Menu**, protože to je menu a ne nastavení ☹️.
@@ -54,6 +53,8 @@ Při zobrazování heap stepping algoritmu ve starém projektu je moment, kdy se
 
 14. **Day/Night theme**:
     - Přidám možnost změnu bravy pozadí (nevím jestli bude černá dobře vidět při obhajobě).
+
+
       
 ## Potřebuji zpětnou vazbu na animace
 
