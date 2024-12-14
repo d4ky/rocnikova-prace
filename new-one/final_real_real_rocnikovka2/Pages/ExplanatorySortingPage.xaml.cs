@@ -46,7 +46,7 @@ namespace final_real_real_rocnikovka2.Pages
             PopulateComboBox();
 
             GraphicElements = [];
-            Numbers = [4, 2, 5, 3, 1];
+            Numbers = [4, 2, 3, 1, 5];
             Balls = [];
             FirstLoad = true;
         }
@@ -141,7 +141,8 @@ namespace final_real_real_rocnikovka2.Pages
         private async void StepBtn_Click(object sender, RoutedEventArgs e)
         {
             IsAutoStepping = false;
-            
+            AutoStepButton.Content = "Auto Step: OFF";
+            AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
             await Animate.AnimationSkip();
             SelectedAlgorithm?.Step();
         }

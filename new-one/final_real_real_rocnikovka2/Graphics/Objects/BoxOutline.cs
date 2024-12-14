@@ -26,6 +26,7 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         public BoxOutline(Canvas canvas, double opacity, Color color, double width, double height) : base(canvas)
         {
             this.MainUIElement = CreateRectangle(opacity, color, width, height);
+            Canvas.SetZIndex(MainUIElement, 0);
         }
 
         private static Rectangle CreateRectangle(double opacity, Color color, double width, double height)
@@ -34,6 +35,7 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             {
                 Opacity = opacity,
                 Fill = Brushes.Transparent,
+                StrokeThickness = Draw.BallRadius * 0.05,
                 Stroke = new SolidColorBrush(color),
                 Width = Draw.BallRadius * width,
                 Height = Draw.BallRadius * height

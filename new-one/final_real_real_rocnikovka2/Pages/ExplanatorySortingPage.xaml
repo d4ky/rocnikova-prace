@@ -35,7 +35,7 @@
                           Margin="0,0,0,10" />
 
                 <TextBlock Text="Animation Delay:" Margin="0,0,0,0" Foreground="#FFFFFF"/>
-                <Slider x:Name="SpeedSlider" Minimum="50" Maximum="2000" Value="1000" 
+                <Slider x:Name="SpeedSlider" Minimum="15" Maximum="2000" Value="1000" 
                         TickFrequency="50" IsSnapToTickEnabled="True" 
                         Margin="0,0,0,0" Foreground="#FFFFFF" ValueChanged="SpeedSlider_ValueChanged"
                         BorderBrush="#5C5C5C" BorderThickness="1" Style="{StaticResource Horizontal_Slider}"/>

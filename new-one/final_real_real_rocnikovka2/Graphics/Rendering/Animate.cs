@@ -49,7 +49,14 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
 
             };
         }
+        public static void ScheduleZIndex(GraphicElement gE, int zIndex)
+        {
+            AnimationStoryboard.Completed += (s, e) =>
+            {
+                Canvas.SetZIndex(gE.MainUIElement, zIndex);
 
+            };
+        }
         public static TimeSpan GetStoryboardDuration()
         {
             TimeSpan maxDuration = TimeSpan.Zero;

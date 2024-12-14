@@ -116,5 +116,15 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         {
             return ((SolidColorBrush)((Ellipse)MainUIElement).Fill).Color;
         }
+
+        public string GetText()
+        {
+            return ((TextBlock)BallText.MainUIElement).Text;
+        }
+
+        public override string ToString()
+        {
+            return $"{((TextBlock)BallText.MainUIElement).Text}";
+        }
     }
 }

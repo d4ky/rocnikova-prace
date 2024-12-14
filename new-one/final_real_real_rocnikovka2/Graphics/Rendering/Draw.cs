@@ -15,7 +15,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
     public static class Draw
     {
         private static double ballRadius;
-        public static double VerticalGap = 2;
+        public static double VerticalGap = 1;
         public static double BallRadius
         {
             get => ballRadius;
@@ -23,6 +23,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         }
         public static void UpdateBallRadius(SortingAlgorithm? sortingAlgorithm, int n, Canvas canvas)
         {
+            //switch case
             if (sortingAlgorithm == null || sortingAlgorithm is BubbleSort || sortingAlgorithm is SelectionSort || sortingAlgorithm is InsertionSort)
             {
                 BallRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / 6);
@@ -30,6 +31,10 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
             else if(sortingAlgorithm is HeapSort)
             {
                 BallRadius = Math.Min(canvas.ActualWidth / ((3 * 2 * Math.Pow(2, Math.Ceiling(Math.Log2(n + 1)) - 1)) + 1), canvas.ActualHeight / (2 * Math.Ceiling(Math.Log2(n + 1)) + 2 + VerticalGap * (Math.Ceiling(Math.Log2(n + 1)) + 2)));
+            }
+            else if (sortingAlgorithm is MergeSort)
+            { 
+                ballRadius = Math.Min(canvas.ActualWidth / (6 * n), canvas.ActualHeight / (VerticalGap * (2 * Math.Ceiling(Math.Log2(n)) + 2) + 2 * (2 * Math.Ceiling(Math.Log2(n)) + 1)));
             }
         }
 
@@ -77,10 +82,11 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
             newBall.SetPosition(ball.X, ball.Y);
             return newBall;
         }
-        public static Ball CloneBall(Ball ball)
+
+        public static Ball CloneBall(Ball ball, double opacity = 1)
         {
-            Ball newBall = new(ball.MainCanvas, 1, ball.GetFillColor(), ball.GetStrokeColor(), ball.BallRadiusRatio);
-            newBall.BallText = new(ball.MainCanvas, 1, ball.BallText.GetColor(), ((TextBlock)ball.BallText.MainUIElement).Text, 0);
+            Ball newBall = new(ball.MainCanvas, opacity, ball.GetFillColor(), ball.GetStrokeColor(), ball.BallRadiusRatio);
+            newBall.BallText = new(ball.MainCanvas, opacity, ball.BallText.GetColor(), ((TextBlock)ball.BallText.MainUIElement).Text, 0);
             newBall.SetPosition(ball.X, ball.Y);
             return newBall;
         }
