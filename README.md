@@ -2,13 +2,13 @@
 
 ## Složky:
 
-- **`old-one`**: Obsahuje mou první špatnou experimentální implementaci této aplikace (má první práce s WPF). Tento program má funkční animaci pro **Merge Sort**.
+- **`old-one`**: Obsahuje mou první špatnou experimentální implementaci této aplikace (má první práce s WPF). Tento program už nemá nic navíc.
 - **`new-one`**: Obsahuje snad lepší implementaci s lepším objektovým návrhem aplikace.
 
 
 ## TODO:
 
-1. **~~Heap Sort~~, Merge Sort a Quick Sort learn animace**: Plánuji přidat animace pro všechny tři algoritmy.
+1. **~~Heap Sort~~, ~~Merge Sort~~ a Quick Sort learn animace**: Plánuji přidat animace pro všechny tři algoritmy.
 
 2. ~~**Vizualizace a statistiky**~~:
    - ~~Ve složce `visualize` přidám obdélník vlevo nahoře, který bude zobrazovat~~:
@@ -41,21 +41,17 @@
 10. **Přepis Settings na Menu**:
     - Přejmenuji **Settings** na **Menu**, protože to je menu a ne nastavení ☹️.
 
-11. **Merge a Quick Sort v Learn tabu**:
-    - Možná přidám možnost druhého zobrazení, které bude ukazovat i **rekurzi** samotnou.
-    - Normální zobrazení ukáže algoritmus v **řádcích**, aby to bylo lehčeji pochopitelné.
-
-12. **Ikonka v levém horním rohu**:
+11. **Ikonka v levém horním rohu**:
     - Změním **ikonku** v levém horním rohu 😥.
 
-13. **OnHover text k Checkboxu v `Visualize`**:
+12. **OnHover text k Checkboxu v `Visualize`**:
     - Přidám text, který vysvětlí, co dělá malý checkbox nad `algortihm selection` (povoluje možnost spustit více algoritmů (různých či stejných) na stejných datech).
 
-14. **Day/Night theme**:
+13. **Day/Night theme**:
     - Přidám možnost změnu bravy pozadí (nevím jestli bude černá dobře vidět při obhajobě).
 
-
-      
+14. **Text vysvětlujicí, co se děje**
+    
 ## Potřebuji zpětnou vazbu na animace
 
 Už na ně pořád koukám a nejsem si jistý, pokud jsou dobré, hlavně ty **color change** efekty kolem okraje koulí. Někdy mi přijdou skoro hypnotické, a možná by měly být rychlejší (nebo instantní). Ale už fakt nevím, co vypadá dobře a co ne.
