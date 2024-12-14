@@ -46,7 +46,7 @@ namespace final_real_real_rocnikovka2.Pages
             PopulateComboBox();
 
             GraphicElements = [];
-            Numbers = [4, 2, 3, 1, 5];
+            Numbers = [4, 2, 5, 1, 3, 2];
             Balls = [];
             FirstLoad = true;
         }

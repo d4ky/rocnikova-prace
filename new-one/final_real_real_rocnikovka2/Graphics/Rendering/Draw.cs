@@ -15,7 +15,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
     public static class Draw
     {
         private static double ballRadius;
-        public static double VerticalGap = 1;
+        public static double VerticalGap = 1.5;
         public static double BallRadius
         {
             get => ballRadius;
@@ -35,6 +35,9 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
             else if (sortingAlgorithm is MergeSort)
             { 
                 ballRadius = Math.Min(canvas.ActualWidth / (6 * n), canvas.ActualHeight / (VerticalGap * (2 * Math.Ceiling(Math.Log2(n)) + 2) + 2 * (2 * Math.Ceiling(Math.Log2(n)) + 1)));
+            } else if (sortingAlgorithm is QuickSort)
+            {
+                ballRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / (16 + VerticalGap));
             }
         }
 
@@ -78,7 +81,7 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         public static Ball CloneBall(Ball ball, Color fill, Color stroke)
         {
             Ball newBall = new(ball.MainCanvas, 1, fill, stroke, ball.BallRadiusRatio);
-            newBall.BallText = new(ball.MainCanvas, 1, ((SolidColorBrush)((TextBlock)ball.BallText.MainUIElement).Foreground).Color, ((TextBlock)ball.BallText.MainUIElement).Text, 0);
+            newBall.BallText = new(ball.MainCanvas, 1, ball.BallText.GetColor(), ((TextBlock)ball.BallText.MainUIElement).Text, 0);
             newBall.SetPosition(ball.X, ball.Y);
             return newBall;
         }

@@ -25,9 +25,8 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         private Path CreateSmoothLine(double opacity, Point start, Point end, double thickness, Color color, bool isDashed)
         {
             double strokeThickness = 0.07 * Draw.BallRadius * thickness;
-
-            var dashArray = isDashed
-                ? new DoubleCollection { (Draw.BallRadius * thickness) / 5, (Draw.BallRadius * thickness) / 3 }
+             var dashArray = isDashed
+                ? new DoubleCollection { 1, 2}
                 : new DoubleCollection();
 
             return new Path
@@ -36,8 +35,8 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
                 StrokeThickness = strokeThickness, 
                 SnapsToDevicePixels = true,       
                 StrokeLineJoin = PenLineJoin.Round,
-                StrokeDashArray = dashArray,     
-                StrokeDashCap = PenLineCap.Round,
+                StrokeDashArray = dashArray, 
+                
                 Opacity = opacity,       
 
                 Data = new PathGeometry

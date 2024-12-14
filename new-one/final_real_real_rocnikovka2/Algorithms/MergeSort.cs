@@ -233,10 +233,12 @@ namespace final_real_real_rocnikovka2.Algorithms
                             {
                                 thisGroupXPos -= 1.5 * Draw.BallRadius;
                             }
-                            Line line = new(Balls[0].MainCanvas, 0, new(thisGroupXPos + Draw.BallRadius, yPos), new(parentGroupXPos, parentGroupYPos), 1, ColorPalette.PureWhite, false);
+                            
+                            Line line = new(Balls[0].MainCanvas, 0, new(thisGroupXPos + Draw.BallRadius, yPos - 0.2 * Draw.BallRadius), new(parentGroupXPos, parentGroupYPos + 0.2 * Draw.BallRadius), 1, ColorPalette.PureWhite, (BallLayers[CurrentLayer][i / 2].Count == 1));
                             GraphicElements.Add(line);
                             line.AddToCanvas();
                             Animate.OpacityChange(line, 1, 0.5, 1);
+                            Canvas.SetZIndex(line.MainUIElement, -1);
                         }
                         
 
@@ -279,18 +281,20 @@ namespace final_real_real_rocnikovka2.Algorithms
                         Animate.MoveBallWithText(newBall,
                             tempBall.X,
                             yPos + 2 * Draw.BallRadius + Draw.BallRadius * Draw.VerticalGap,
-                            1, 0);
+                            1, 0.5);
 
-                        Line nL = new(newBall.MainCanvas, 1, new(parentBall.X + Draw.BallRadius, parentBall.Y + 2 * Draw.BallRadius),
-                            new(tempBall.X + Draw.BallRadius, yPos + 2 * Draw.BallRadius + Draw.BallRadius * Draw.VerticalGap), 1, ColorPalette.GreyStroke, false);
+                        Line nL = new(newBall.MainCanvas, 0, new(parentBall.X + Draw.BallRadius, parentBall.Y + 2.2 * Draw.BallRadius),
+                            new(tempBall.X + Draw.BallRadius, yPos + 1.8 * Draw.BallRadius + Draw.BallRadius * Draw.VerticalGap), 1, ColorPalette.PureWhite, true);
                         nL.AddToCanvas();
+                        Animate.OpacityChange(nL, 1, 0.5, 1);
                         GraphicElements.Add(nL);
+                        Canvas.SetZIndex(nL.MainUIElement, -1);
 
-                        BoxOutline bO = new(newBall.MainCanvas, 0, ColorPalette.SelectedStroke, 2, 2);
+                        BoxOutline bO = new(newBall.MainCanvas, 0, ColorPalette.SelectedStroke, 2.4, 2.4);
                         Canvas.SetZIndex(bO.MainUIElement, 0);
-                        Animate.OpacityChange(bO, 1, 0.2, 0);
+                        Animate.OpacityChange(bO, 0.6, 0.2, 0);
                         GraphicElements.Add(bO);
-                        bO.SetPosition(parentBall.X, parentBall.Y);
+                        bO.SetPosition(parentBall.X - 0.2 * Draw.BallRadius, parentBall.Y - 0.2 * Draw.BallRadius);
                         bO.AddToCanvas();
                         LeftBox = bO;
 
@@ -314,22 +318,22 @@ namespace final_real_real_rocnikovka2.Algorithms
                         LeftParentSubList = GetSublistContainingIndex(BallLayers[CurrentLayer], CurrentIndex);
                         RightParentSubList = GetSublistContainingIndex(BallLayers[CurrentLayer], CurrentIndex + LeftParentSubList.Count);
 
-                        BoxOutline bO1 = new(leftFirstParent.MainCanvas, 0, ColorPalette.SelectedStroke, 3* LeftParentSubList.Count - 1, 2);
+                        BoxOutline bO1 = new(leftFirstParent.MainCanvas, 0, ColorPalette.SelectedStroke, 3* LeftParentSubList.Count - 1 + 0.4, 2.4);
                         GraphicElements.Add(bO1);
-                        bO1.SetPosition(leftFirstParent.X, leftFirstParent.Y);
+                        bO1.SetPosition(leftFirstParent.X - 0.2 * Draw.BallRadius, leftFirstParent.Y - 0.2 * Draw.BallRadius);
                         Canvas.SetZIndex(bO1.MainUIElement, 0);
                         bO1.AddToCanvas();
                         LeftBox = bO1;
 
-                        BoxOutline bO2 = new(rightFirstParent.MainCanvas, 0, ColorPalette.SelectedStroke, 3 * RightParentSubList.Count - 1, 2);
+                        BoxOutline bO2 = new(rightFirstParent.MainCanvas, 0, ColorPalette.SelectedStroke, 3 * RightParentSubList.Count - 1 + 0.4, 2.4);
                         GraphicElements.Add(bO2);
-                        bO2.SetPosition(rightFirstParent.X, rightFirstParent.Y);
+                        bO2.SetPosition(rightFirstParent.X - 0.2 * Draw.BallRadius, rightFirstParent.Y - 0.2 * Draw.BallRadius);
                         Canvas.SetZIndex(bO2.MainUIElement, 0);
                         bO2.AddToCanvas();
                         RightBox = bO2;
 
-                        Animate.OpacityChange(bO1, 1, 0.2, 0);
-                        Animate.OpacityChange(bO2, 1, 0.2, 0);
+                        Animate.OpacityChange(bO1, 0.6, 0.2, 0);
+                        Animate.OpacityChange(bO2, 0.6, 0.2, 0);
 
                         StepState = 2;
                         if (BallLayers.TryGetValue(CurrentLayer + 1, out var e))
@@ -414,6 +418,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Animate.AnimationClear();
 
                     Ball newBall1 = Draw.CloneBall(LeftParentSubList[LeftIndex], ColorPalette.GreyFill, ColorPalette.GreyStroke);
+                    newBall1.BallText.ChangeColor(ColorPalette.GreyStroke);
                     GraphicElements.Add(newBall1);
                     Canvas.SetZIndex(newBall1.MainUIElement, -1);
                     newBall1.AddToCanvas();
@@ -455,8 +460,8 @@ namespace final_real_real_rocnikovka2.Algorithms
                             xCoord1 += 1.5 * Draw.BallRadius;
                         }
                         Line newL1 = new(LeftParentSubList[LeftIndex - 1].MainCanvas, 0,
-                            new(xCoord1, newBall1.Y + 2 * Draw.BallRadius),
-                            new(xCoord, yPos),
+                            new(xCoord1, newBall1.Y + 2.2 * Draw.BallRadius),
+                            new(xCoord, yPos - 0.2 * Draw.BallRadius),
                             1, ColorPalette.GreyStroke, false);
                         newL1.AddToCanvas();
                         GraphicElements.Add(newL1);
@@ -466,13 +471,15 @@ namespace final_real_real_rocnikovka2.Algorithms
                             x2coord -= 1.5 * Draw.BallRadius; 
                         }
                         Line newL2 = new(RightParentSubList[RightIndex - 1].MainCanvas, 0,
-                        new(x2coord, newBall1.Y + 2 * Draw.BallRadius),
-                        new(xCoord, yPos),
+                        new(x2coord, newBall1.Y + 2.2 * Draw.BallRadius),
+                        new(xCoord, yPos - 0.2 * Draw.BallRadius),
                         1, ColorPalette.GreyStroke, false);
                         newL2.AddToCanvas();
                         
                         GraphicElements.Add(newL2);
 
+                        Canvas.SetZIndex(newL2.MainUIElement, -1);
+                        Canvas.SetZIndex(newL1.MainUIElement, -1);
                         Animate.OpacityChange(newL1, 1, 0.5, 1);
                         Animate.OpacityChange(newL2, 1, 0.5, 1);
 
@@ -515,6 +522,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Animate.AnimationClear();
 
                     Ball newBall2 = Draw.CloneBall(RightParentSubList[RightIndex], ColorPalette.GreyFill, ColorPalette.GreyStroke);
+                    newBall2.BallText.ChangeColor(ColorPalette.GreyStroke);
                     GraphicElements.Add(newBall2);
                     Canvas.SetZIndex(newBall2.MainUIElement, -1);
                     newBall2.AddToCanvas();
@@ -557,8 +565,8 @@ namespace final_real_real_rocnikovka2.Algorithms
                             xCoord1 += 1.5 * Draw.BallRadius;
                         }
                         Line newL3 = new(newBall2.MainCanvas, 0,
-                            new(xCoord1, newBall2.Y + 2 * Draw.BallRadius),
-                            new(xCoord, yPos),
+                            new(xCoord1, newBall2.Y + 2.2 * Draw.BallRadius),
+                            new(xCoord, yPos - 0.2 * Draw.BallRadius),
                             1, ColorPalette.GreyStroke, false);
                         newL3.AddToCanvas();
                         GraphicElements.Add(newL3);
@@ -568,12 +576,15 @@ namespace final_real_real_rocnikovka2.Algorithms
                             xCoord2 += 1.5 * Draw.BallRadius;
                         }
                         Line newL4 = new(newBall2.MainCanvas, 0, 
-                            new(xCoord2, newBall2.Y + 2 * Draw.BallRadius),
-                            new(xCoord, yPos),
+                            new(xCoord2, newBall2.Y + 2.2 * Draw.BallRadius),
+                            new(xCoord, yPos - 0.2 * Draw.BallRadius),
                             1, ColorPalette.GreyStroke, false);
                         newL4.AddToCanvas();
                         GraphicElements.Add(newL4);
 
+
+                        Canvas.SetZIndex(newL3.MainUIElement, -1);
+                        Canvas.SetZIndex(newL4.MainUIElement, -1);
                         Animate.OpacityChange(newL3, 1, 0.5, 1);
                         Animate.OpacityChange(newL4, 1, 0.5, 1);
                         
