@@ -8,7 +8,7 @@
 
 ## TODO:
 
-1. **~~Heap Sort~~, ~~Merge Sort~~ a Quick Sort learn animace**: Plánuji přidat animace pro všechny tři algoritmy.
+1. ~~**Heap Sort Merge Sort a Quick Sort learn animace**: Plánuji přidat animace pro všechny tři algoritmy.~~
 
 2. ~~**Vizualizace a statistiky**~~:
    - ~~Ve složce `visualize` přidám obdélník vlevo nahoře, který bude zobrazovat~~:
