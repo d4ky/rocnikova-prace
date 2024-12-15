@@ -78,8 +78,8 @@ namespace final_real_real_rocnikovka2.Pages
             double yPos = MainCanvas.ActualHeight / 2 - Draw.BallRadius;
             foreach (int number in numbers)
             {
-                Ball newBall = new(MainCanvas, 1, ColorPalette.DefaultFill, ColorPalette.DefaultStroke, 1);
-                newBall.BallText = new(MainCanvas, 1, ColorPalette.TextColor, number.ToString(), 0);
+                Ball newBall = new(MainCanvas, 1, ColorPalette.DEFAULT_FILL, ColorPalette.DEFAULT_STROKE, 1);
+                newBall.BallText = new(MainCanvas, 1, ColorPalette.DEFAULT_TEXT_COLOR, number.ToString(), 0);
 
                 newBall.SetPosition(xPos, yPos);
                 newBall.AddToCanvas();
@@ -115,7 +115,7 @@ namespace final_real_real_rocnikovka2.Pages
             SelectedAlgorithm?.Reset(Numbers, Balls, GraphicElements);
             if (SelectedAlgorithm == (SortingAlgorithm)AlgorithmComboBox.SelectedItem)
                 SelectedAlgorithm?.OnSelect(Numbers, Balls);
-            Draw.ChangeColorForAll(Balls, ColorPalette.DefaultFill, ColorPalette.DefaultStroke, false);
+            Draw.ChangeColorForAll(Balls, ColorPalette.DEFAULT_FILL, ColorPalette.DEFAULT_STROKE, false);
             AutoStepButton.Content = "Auto Step: OFF";
             AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
             IsAutoStepping = false;
@@ -190,6 +190,109 @@ namespace final_real_real_rocnikovka2.Pages
                 Draw.SwapXPos(Balls[i], Balls[j]);
             }
            OnComboBoxSelectionChanged(null, null);
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.Text, 0);
+        }
+
+        private void SeriesTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                GenerateNumberSeries();
+            }
+        }
+
+        private void GenerateNumberSeries()
+        {
+            SeriesTextBox.Text.Replace(" ", "");
+            if (int.TryParse(SeriesTextBox.Text, out int n))
+            {
+                if (n < 4)
+                {
+                    MessageBox.Show("N must be at least 4");
+                }
+                else if (n >= 51)
+                {
+                    MessageBox.Show("N must be smaller than 50");
+                }
+                else
+                {
+                    List<int> numbers = Enumerable.Range(1, n).ToList();
+
+                    Random rand = new Random();
+                    numbers = numbers.OrderBy(x => rand.Next()).ToList();
+
+                    IsAutoStepping = false;
+                    AutoStepButton.Content = "Auto Step: OFF";
+                    AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
+
+                    Numbers = new List<int>(numbers);
+                    Balls.ForEach(e => e.Delete());
+                    Balls.Clear();
+                    InitializeBallObjects(Numbers);
+                    OnComboBoxSelectionChanged(null, null);
+                  
+
+                }
+            }
+            SeriesTextBox.Clear();
+        }
+
+        private void ExactInputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ParseExactInput();
+            }
+        }
+
+        private void ParseExactInput()
+        {
+            try
+            {
+                List<int> numbers = Array.ConvertAll(ExactInputTextBox.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse).ToList();
+                if (numbers.Count < 4)
+                {
+                    MessageBox.Show("Array must have at least 4 elements");
+                }
+                else if (numbers.Count > 50)
+                {
+                    MessageBox.Show("Array can't have more than 50 elements");
+                }
+                else
+                {
+                    foreach (int number in numbers)
+                    {
+                        if (number > 9999)
+                        {
+                            MessageBox.Show("All numbers must be less than 10000");
+                            ExactInputTextBox.Clear();
+                            return;
+                        }
+                    }
+                    IsAutoStepping = false;
+                    AutoStepButton.Content = "Auto Step: OFF";
+                    AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
+
+                    Numbers = new List<int>(numbers);
+                    Balls.ForEach(e => e.Delete());
+                    Balls.Clear();
+                    InitializeBallObjects(Numbers);
+                    OnComboBoxSelectionChanged(null, null);
+                }
+            }
+            catch (OverflowException)
+            {
+                MessageBox.Show("All numbers must be less than 10000");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("SOMETHING WENT WRONG");
+            }
+            ExactInputTextBox.Clear();
         }
     }
 }

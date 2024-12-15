@@ -34,6 +34,10 @@ namespace final_real_real_rocnikovka2.Algorithms
         }
         public override void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements)
         {
+            foreach (var item in graphicElements)
+            {
+                item.Delete();
+            }
             Numbers = numbers;
             Balls = balls;
             GraphicElements = graphicElements;
@@ -51,7 +55,7 @@ namespace final_real_real_rocnikovka2.Algorithms
             int n = Numbers.Count;
             for (int i = 0; i < n - 1; i++)
             {
-                Boxes[i].ChangeColor(ColorPalette.PivotBarFill);
+                Boxes[i].ChangeColor(ColorPalette.PIVOT_BAR_FILL);
                 int minNumberIndex = i;
 
                 for (int j = i + 1; j < n; j++)
@@ -59,29 +63,30 @@ namespace final_real_real_rocnikovka2.Algorithms
                     if (Globals.Stop) return;
                     if (IsSorted()) // Ano, toto pridava casovou komplexitu, ale toto vizualni znazorneni to nejak neefektuje
                     {
-                        Draw.DrawDone(Boxes, ColorPalette.SelectedBarFill);
+                        Draw.DrawDone(Boxes, ColorPalette.SELECTED_BAR_FILL);
                         return;
                     };
 
-                    Boxes[j].ChangeColor(ColorPalette.SelectedBarFill);
+                    Boxes[j].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                     
                     await Wait(Globals.AnimationMs, j);
+                    if (Globals.Stop) return;
                     ComparisonCount++;
                     if (Numbers[j] < Numbers[minNumberIndex])
                     {
                         if (minNumberIndex != i)
-                            Boxes[minNumberIndex].ChangeColor(ColorPalette.DefaultBarFill);
+                            Boxes[minNumberIndex].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);
 
                         minNumberIndex = j;
-                        Boxes[j].ChangeColor(ColorPalette.MinimumBarFill);
+                        Boxes[j].ChangeColor(ColorPalette.MINIMUM_BAR_FILL);
                     } else
                     {
-                        Boxes[j].ChangeColor(ColorPalette.DefaultBarFill);
+                        Boxes[j].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);
                     }
                 }
 
-                Boxes[i].ChangeColor(ColorPalette.DefaultBarFill); 
-                Boxes[minNumberIndex].ChangeColor(ColorPalette.SelectedBarFill);
+                Boxes[i].ChangeColor(ColorPalette.DEFAULT_BAR_FILL); 
+                Boxes[minNumberIndex].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
 
                 if (minNumberIndex != i)
                 {
@@ -92,7 +97,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Draw.SwapXPos(Boxes[i], Boxes[minNumberIndex]);
                 }
             }
-            Boxes[n-1].ChangeColor(ColorPalette.SelectedBarFill);
+            Boxes[n-1].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
 
 
         }
@@ -105,7 +110,7 @@ namespace final_real_real_rocnikovka2.Algorithms
             {
                 case 0:
                     Animate.AnimationClear();
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SelectedStroke, 0.2, 0);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SELECTED_STROKE, 0.2, 0);
                     Animate.AnimationRun();
                     MinIndex = CurrentIndex;
                     ComparisonIndex = CurrentIndex + 1;
@@ -115,11 +120,11 @@ namespace final_real_real_rocnikovka2.Algorithms
                     
                     Animate.AnimationClear();
                     if (LastMinIndex >= 0)
-                        Animate.BallStrokeColorChange(Balls[LastMinIndex], ColorPalette.DefaultStroke, 0.2, 0);
+                        Animate.BallStrokeColorChange(Balls[LastMinIndex], ColorPalette.DEFAULT_STROKE, 0.2, 0);
                     if (ComparisonIndex < N)
-                        Animate.BallStrokeColorChange(Balls[ComparisonIndex], ColorPalette.SelectedStroke, 0.2, 0);
-                    Animate.BallStrokeColorChange(Balls[ComparisonIndex - 1], ColorPalette.DefaultStroke, 0.2, 0);
-                    Animate.BallStrokeColorChange(Balls[MinIndex], ColorPalette.SoftBlueStroke, 0.2, 0);
+                        Animate.BallStrokeColorChange(Balls[ComparisonIndex], ColorPalette.SELECTED_STROKE, 0.2, 0);
+                    Animate.BallStrokeColorChange(Balls[ComparisonIndex - 1], ColorPalette.DEFAULT_STROKE, 0.2, 0);
+                    Animate.BallStrokeColorChange(Balls[MinIndex], ColorPalette.SOFTBLUE_STROKE, 0.2, 0);
                     if (ComparisonIndex < N)
                     {
                         if (Numbers[ComparisonIndex] < Numbers[MinIndex])
@@ -137,8 +142,8 @@ namespace final_real_real_rocnikovka2.Algorithms
                     break;
                 case 2:
                     Animate.AnimationClear();
-                    Animate.BallFillColorChange(Balls[MinIndex], ColorPalette.GreenFill, 1, 0.5);
-                    Animate.BallStrokeColorChange(Balls[MinIndex], ColorPalette.GreenStroke, 1, 0.5);
+                    Animate.BallFillColorChange(Balls[MinIndex], ColorPalette.GREEN_FILL, 1, 0.5);
+                    Animate.BallStrokeColorChange(Balls[MinIndex], ColorPalette.GREEN_STROKE, 1, 0.5);
                     if (MinIndex != CurrentIndex)
                     {
                         Animate.BallSwap(Balls[CurrentIndex], Balls[MinIndex], 1, 0, 1.5);
@@ -150,8 +155,8 @@ namespace final_real_real_rocnikovka2.Algorithms
                     if (CurrentIndex >= N - 1)
                     {
                         IsSortedBool = true;
-                        Animate.BallFillColorChange(Balls[CurrentIndex], ColorPalette.GreenFill, 1, 1);
-                        Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.GreenStroke, 1, 1);
+                        Animate.BallFillColorChange(Balls[CurrentIndex], ColorPalette.GREEN_FILL, 1, 1);
+                        Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.GREEN_STROKE, 1, 1);
                     }
                     StepState = 0;
                     LastMinIndex = -1;

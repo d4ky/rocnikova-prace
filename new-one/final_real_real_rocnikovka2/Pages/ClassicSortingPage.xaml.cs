@@ -38,9 +38,9 @@ namespace final_real_real_rocnikovka2.Pages
         public SortingAlgorithm? SelectedAlgorithm { get; set; }
         private List<int> Numbers { get; set; }
         private List<Box> Boxes { get; set; }
+        private Dictionary<string, List<int>> TestDataDictionary { get; set; }
 
-
-        private SortingAlgorithm _runningAlgorithm;
+        private SortingAlgorithm RunningAlgorithm;
 
 
         
@@ -48,26 +48,71 @@ namespace final_real_real_rocnikovka2.Pages
         {
             InitializeComponent();
             this.SortingAlgorithms = sortingAlgorithms;
+            
+            TestDataDictionary = new(){
+                { "Default", TestData.DEFAULT },
+                { "Stairs", TestData.STAIRS },
+                { "Reverse sorted", TestData.REVERSE_SORTED},
+                { "Almost sorted", TestData.ALMOST_SRORTED }
+            };
+            
+
             PopulateComboBox();
-            Numbers = [5, 47, 98, 70, 74, 25, 81, 57, 13, 100, 84, 61, 11, 73, 75, 2, 48, 23, 17, 54, 22, 56, 19, 97, 79, 77, 38, 55, 26, 40, 45, 67, 24, 95, 94, 8, 33, 1, 30, 16, 28, 4, 50, 34, 12, 66, 52, 27, 59, 63, 82, 58, 65, 92, 10, 7, 78, 15, 44, 46, 91, 41, 6, 21, 85, 31, 14, 86, 80, 69, 20, 43, 71, 35, 42, 36, 72, 51, 96, 29, 64, 39, 53, 88, 90, 89, 9, 3, 62, 18, 99, 32, 37, 93, 83, 76, 68, 60, 49, 87];
+            DataContext = this;
+
+            Numbers = [];
             Boxes = [];
+           
+
+            StatsTextBlock.Text = $"Stats (n = {Numbers.Count})";
             SwapCountTextBlock.Text = $"Swap Count: 0";
             ComparisonCountTextBlock.Text = $"Comparison count: 0";
+
             FirstLoad = true;
             SpeedText.Text = $"{(int)SpeedSlider.Value} ms";
-            DataContext = this;
         }
+
+        private void OnDataComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StopBtn_Click(null, null);
+           
+            Numbers = new List<int>(TestDataDictionary[DataComboBox.SelectedItem.ToString()]);
+            
+
+            Boxes.ForEach(e => e.Delete());
+            Boxes.Clear();
+            InitializeRectObjects(Numbers);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+         private void PopulateComboBox()
+        {
+            AlgorithmComboBox.Items.Clear();
+            foreach (var algorithm in SortingAlgorithms)
+            {
+                AlgorithmComboBox.Items.Add(algorithm);
+            }
+
+            DataComboBox.Items.Clear();
+
+            foreach (string dataName in TestDataDictionary.Keys)
+            {
+                DataComboBox.Items.Add($"{dataName}");
+            }
+            
+        }
+
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             if (FirstLoad)
             {
-                InitializeRectObjects(Numbers);
+                DataComboBox.SelectedItem = "Default";
                 FirstLoad = false;
             }
                 
@@ -79,9 +124,8 @@ namespace final_real_real_rocnikovka2.Pages
         private void PageUnloaded(object sender, RoutedEventArgs e)
         {
             Globals.Stop = true;
-            Draw.ChangeColorForAll(Boxes, ColorPalette.DefaultBarFill);
+            Draw.ChangeColorForAll(Boxes, ColorPalette.DEFAULT_BAR_FILL);
         }
-
 
         private void CanvasSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -102,7 +146,7 @@ namespace final_real_real_rocnikovka2.Pages
             double xPos = 0;
             foreach (int number in numbers)
             {
-                Box newBox = new(MainCanvas, 1, ColorPalette.DefaultBarFill, width, number * heightPerNum);
+                Box newBox = new(MainCanvas, 1, ColorPalette.DEFAULT_BAR_FILL, width, number * heightPerNum);
                 newBox.SetPosition(xPos, MainCanvas.ActualHeight - number * heightPerNum);
                 newBox.AddToCanvas();
                 Boxes.Add(newBox);
@@ -111,19 +155,11 @@ namespace final_real_real_rocnikovka2.Pages
             }
         }
 
-        private void PopulateComboBox()
-        {
-            AlgorithmComboBox.Items.Clear();
-            foreach (var algorithm in SortingAlgorithms)
-            {
-                AlgorithmComboBox.Items.Add(algorithm);
-            }
-        }
-
-
         private void OnComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedAlgorithm = (SortingAlgorithm)AlgorithmComboBox.SelectedItem;
+            if (!Globals.MultiIsChecked)
+                OnDataComboBoxSelectionChanged(null, null);
         }
 
         private async void RunBtn_Click(object sender, RoutedEventArgs e)
@@ -132,7 +168,7 @@ namespace final_real_real_rocnikovka2.Pages
             Globals.Stop = false;
             if (!Globals.AlgorithmIsRunning || Globals.MultiIsChecked)
             {
-                _runningAlgorithm = SelectedAlgorithm;
+                RunningAlgorithm = SelectedAlgorithm;
                 Globals.AlgorithmIsRunning = true;
 
                 SelectedAlgorithm.PropertyChanged += OnAlgorithmStatsChanged;
@@ -145,14 +181,16 @@ namespace final_real_real_rocnikovka2.Pages
                 Globals.AlgorithmIsRunning = false;
             } 
         }
+
         private void OnAlgorithmStatsChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender == _runningAlgorithm)
+            if (sender == RunningAlgorithm)
             {
-                SwapCountTextBlock.Text = $"Swap Count: {_runningAlgorithm.SwapCount.ToString()}";
-                ComparisonCountTextBlock.Text = $"Comparison count: {_runningAlgorithm.ComparisonCount.ToString()}";
+                SwapCountTextBlock.Text = $"Swap Count: {RunningAlgorithm.SwapCount.ToString()}";
+                ComparisonCountTextBlock.Text = $"Comparison count: {RunningAlgorithm.ComparisonCount.ToString()}";
             }
         }
+
         private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Globals.AnimationMs = (int)SpeedSlider.Value;
@@ -207,12 +245,13 @@ namespace final_real_real_rocnikovka2.Pages
 
         }
 
-        private void StopBtn_Click(Object sender, RoutedEventArgs e)
+        private async void StopBtn_Click(Object sender, RoutedEventArgs e)
         {
             if (SelectedAlgorithm == null) return;
             Globals.Stop = true;
             if (!SelectedAlgorithm.IsSorted())
-                Draw.ChangeColorForAll(Boxes, ColorPalette.DefaultBarFill);
+                Draw.ChangeColorForAll(Boxes, ColorPalette.DEFAULT_BAR_FILL);
+            await Task.Delay(1);
 
         }
 
@@ -220,10 +259,12 @@ namespace final_real_real_rocnikovka2.Pages
         {
             Globals.MultiIsChecked = false;
             Globals.Stop = true;
+            OnDataComboBoxSelectionChanged(null, null);
+
             SpeedSlider_ValueChanged(null, null);
             if (SelectedAlgorithm == null) return;
-            if (!SelectedAlgorithm.IsSorted())
-                Draw.ChangeColorForAll(Boxes, ColorPalette.DefaultBarFill);
+            if (SelectedAlgorithm.IsSorted())
+                Draw.ChangeColorForAll(Boxes, ColorPalette.DEFAULT_BAR_FILL);
         }
 
         private void CheckBoxChecked(object sender, RoutedEventArgs e)
@@ -235,22 +276,145 @@ namespace final_real_real_rocnikovka2.Pages
         private void ScrambleBtn_Click(object sender, RoutedEventArgs e)
         {
             if (Globals.EndAnimationIsRunning) return;
-            Random random = new Random();
-            int n = Numbers.Count;
+            OnDataComboBoxSelectionChanged(null, null);
 
-            for (int i = n - 1; i > 0; i--)
+            //Random random = new Random();
+            //int n = Numbers.Count;
+
+            //for (int i = n - 1; i > 0; i--)
+            //{
+            //    int j = random.Next(i + 1);
+            //    int temp = Numbers[i];
+            //    Numbers[i] = Numbers[j];
+            //    Numbers[j] = temp;
+            //    Box tempBox = Boxes[i];
+            //    Boxes[i] = Boxes[j];
+            //    Boxes[j] = tempBox;
+
+            //    Draw.SwapXPos(Boxes[i], Boxes[j]);
+            //}
+            //StopBtn_Click(null, null );
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.Text, 0);
+        }
+
+        private void SeriesTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
             {
-                int j = random.Next(i + 1);
-                int temp = Numbers[i];
-                Numbers[i] = Numbers[j];
-                Numbers[j] = temp;
-                Box tempBox = Boxes[i];
-                Boxes[i] = Boxes[j];
-                Boxes[j] = tempBox;
-
-                Draw.SwapXPos(Boxes[i], Boxes[j]);
+                GenerateNumberSeries();
             }
-            StopBtn_Click(null, null );
+        }
+
+        private void GenerateNumberSeries()
+        {
+            SeriesTextBox.Text.Replace(" ", "");
+            if (int.TryParse(SeriesTextBox.Text, out int n))
+            {
+                if (n >= 1001)
+                {
+                    MessageBox.Show("N must be smaller than 1000");
+                } else
+                {
+                    List<int> numbers = Enumerable.Range(1, n).ToList();
+
+                    Random rand = new Random();
+                    numbers = numbers.OrderBy(x => rand.Next()).ToList();
+
+                    StopBtn_Click(null, null);
+
+                    Numbers = new List<int>(numbers);
+                    Boxes.ForEach(e => e.Delete());
+                    Boxes.Clear();
+                    InitializeRectObjects(Numbers);
+                }                
+            }
+            SeriesTextBox.Clear();
+        }
+
+        private void ExactInputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ParseExactInput();
+            }
+        }
+        
+        private void ParseExactInput()
+        {
+            try {
+                List<int> numbers = Array.ConvertAll(ExactInputTextBox.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse).ToList();
+                if (numbers.Count < 2)
+                {
+                    MessageBox.Show("Array must have at least 2 elements");
+                } else
+                {
+                    StopBtn_Click(null, null);
+
+                    Numbers = new List<int>(numbers);
+                    Boxes.ForEach(e => e.Delete());
+                    Boxes.Clear();
+                    InitializeRectObjects(Numbers);
+                }
+            }
+            catch (OverflowException)
+            {
+                MessageBox.Show("All numbers must be less than 2^31");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("SOMETHING WENT WRONG");
+            }
+            ExactInputTextBox.Clear();
+        }
+
+        private void RandomTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                GenerateRandomNumbers();
+            }
+        }
+
+        private void GenerateRandomNumbers()
+        {
+            if (MinTextBox.Text.Length < 1 || MaxTextBox.Text.Length < 1 || NTextBox.Text.Length < 1)
+            {
+                MessageBox.Show("Please fill in all three fields");
+                return;
+            }
+            try
+            {
+                int n = int.Parse(NTextBox.Text.Replace(" ", ""));
+                int min = int.Parse(MinTextBox.Text.Replace(" ", ""));
+                int max = int.Parse(MaxTextBox.Text.Replace(" ", ""));
+
+                if (n >= 1001)
+                {
+                    MessageBox.Show("N must be smaller than 1000");
+                    return;
+                }
+                    Random rand = new Random();
+                List<int> numbers = Enumerable.Range(0, n).Select(_ => rand.Next(min, max + 1)).ToList();
+
+                StopBtn_Click(null, null);
+
+                Numbers = new List<int>(numbers);
+                Boxes.ForEach(e => e.Delete());
+                Boxes.Clear();
+                InitializeRectObjects(Numbers);
+
+            } catch
+            {
+                MessageBox.Show("SOMETHING WENT WRONG");
+            }
+
+            MinTextBox.Clear();
+            MaxTextBox.Clear();
+            NTextBox.Clear();
         }
     }
 }

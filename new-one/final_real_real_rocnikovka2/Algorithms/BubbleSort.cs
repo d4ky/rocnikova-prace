@@ -39,6 +39,10 @@ namespace final_real_real_rocnikovka2.Algorithms
         }
         public override void Reset(List<int> numbers, List<Ball> balls, List<GraphicElement> graphicElements)
         {
+            foreach (var item in graphicElements)
+            {
+                item.Delete();
+            }
             Numbers = numbers;
             Balls = balls;
             GraphicElements = graphicElements;
@@ -50,6 +54,10 @@ namespace final_real_real_rocnikovka2.Algorithms
 
         public override async Task Sort()
         {
+            if (IsSorted())
+            {
+                return;
+            }
             for (int i = 0; i < N - 1; i++)
             {
                 for (int j = 0; j < N - i - 1; j++)
@@ -61,12 +69,12 @@ namespace final_real_real_rocnikovka2.Algorithms
                     // swap, ale pak by algoritmus udelal jeden prazdny pruchod, coz by nebylo hezke.
                     if (IsSorted()) 
                     {
-                        Draw.DrawDone(Boxes, ColorPalette.SelectedBarFill);
+                        Draw.DrawDone(Boxes, ColorPalette.SELECTED_BAR_FILL);
                         return;
                     }
 
-                    Boxes[j].ChangeColor(ColorPalette.SelectedBarFill);
-                    Boxes[j+1].ChangeColor(ColorPalette.SelectedBarFill);
+                    Boxes[j].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
+                    Boxes[j+1].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                     ComparisonCount++;
                     
                     if (Numbers[j] > Numbers[j + 1])
@@ -79,8 +87,9 @@ namespace final_real_real_rocnikovka2.Algorithms
                     }
 
                     await Wait(Globals.AnimationMs, j);
-                    Boxes[j].ChangeColor(ColorPalette.DefaultBarFill);
-                    Boxes[j + 1].ChangeColor(ColorPalette.DefaultBarFill);
+                    if (Globals.Stop) return;
+                    Boxes[j].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);
+                    Boxes[j + 1].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);
                 }
             }
         }
@@ -95,22 +104,22 @@ namespace final_real_real_rocnikovka2.Algorithms
                     GreaterThanSymbol?.Delete();
                     if (CurrentIndex > 0)
                     {
-                        Balls[CurrentIndex - 1].SetStrokeColor(ColorPalette.DefaultStroke);
+                        Balls[CurrentIndex - 1].SetStrokeColor(ColorPalette.DEFAULT_STROKE);
                     } else if (CurrentIndex == 0)
                     {
-                        Balls[N-1].SetStrokeColor(ColorPalette.DefaultStroke);
-                        Balls[N - 2]?.SetStrokeColor(ColorPalette.DefaultStroke);
+                        Balls[N-1].SetStrokeColor(ColorPalette.DEFAULT_STROKE);
+                        Balls[N - 2]?.SetStrokeColor(ColorPalette.DEFAULT_STROKE);
                     }
                     Animate.AnimationClear();
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SelectedStroke, 0.5, 0);
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex + 1], ColorPalette.SelectedStroke, 0.5, 0);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex], ColorPalette.SELECTED_STROKE, 0.5, 0);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex + 1], ColorPalette.SELECTED_STROKE, 0.5, 0);
                     Animate.AnimationRun();
 
                     StepState = 1;
                     break;
                 case 1:
                     GraphicElements.Remove(GreaterThanSymbol);
-                    GreaterThanSymbol = new(Balls[0].MainCanvas, 0, ColorPalette.DefaultFill, ColorPalette.DefaultStroke, 1);
+                    GreaterThanSymbol = new(Balls[0].MainCanvas, 0, ColorPalette.DEFAULT_FILL, ColorPalette.DEFAULT_STROKE, 1);
                     GreaterThanSymbol.BallText = new(GreaterThanSymbol.MainCanvas, 1, Colors.WhiteSmoke, ">", 0);
                     GreaterThanSymbol.SetPosition((Balls[CurrentIndex].X + Balls[CurrentIndex + 1].X) / 2, Balls[CurrentIndex].Y - 0.05 * Draw.BallRadius);
                     GreaterThanSymbol.AddToCanvas();
@@ -118,12 +127,12 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Animate.AnimationClear();
                     if (Numbers[CurrentIndex] > Numbers[CurrentIndex + 1])
                     {
-                        Animate.TextColorChange(GreaterThanSymbol.BallText, ColorPalette.PureGreen, 0, 0);
+                        Animate.TextColorChange(GreaterThanSymbol.BallText, ColorPalette.PURE_GREEN, 0, 0);
                         StepState = 2;
                     }
                     else
                     {
-                        Animate.TextColorChange(GreaterThanSymbol.BallText, ColorPalette.PureRed, 0, 0);
+                        Animate.TextColorChange(GreaterThanSymbol.BallText, ColorPalette.PURE_RED, 0, 0);
                         CurrentIndex++;
                         StepState = 0;
 
@@ -142,7 +151,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                 case 2:
                     Animate.AnimationClear();
                     Animate.BallSwap(Balls[CurrentIndex], Balls[CurrentIndex + 1], 1, 0, 1.5);
-                    Animate.BallStrokeColorChange(Balls[CurrentIndex + 1], ColorPalette.DefaultStroke, 0.5, 0.5);
+                    Animate.BallStrokeColorChange(Balls[CurrentIndex + 1], ColorPalette.DEFAULT_STROKE, 0.5, 0.5);
                     Animate.OpacityChange(GreaterThanSymbol.BallText, 0, 1, 0);
                     Animate.AnimationRun();
                     SwapInList(Balls, CurrentIndex, CurrentIndex + 1);
@@ -160,7 +169,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                 case 3:
                     IsSortedBool = true;
                     GreaterThanSymbol?.Delete();
-                    Draw.ChangeColorForAll(Balls, ColorPalette.GreenFill, ColorPalette.GreenStroke);
+                    Draw.ChangeColorForAll(Balls, ColorPalette.GREEN_FILL, ColorPalette.GREEN_STROKE);
                     break;
             }
         }
