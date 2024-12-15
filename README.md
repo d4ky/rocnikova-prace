@@ -13,18 +13,18 @@
 2. ~~**Vizualizace a statistiky**~~:
    - ~~Ve složce `visualize` přidám obdélník vlevo nahoře, který bude zobrazovat~~:
      - ~~Počet **porovnání**, **lookupů** a **swapů**~~.
-     - Velikost pole.
+     - ~~Velikost pole~~.
 
 3.~~**Funckionalita tlačítka** `scramble`~~:
    - ~~Tlačítko, které **rozhodí** náhodně zadaná čísla~~.
 
-4. **Možnost vlastního inputu**:
-   - Uživatel bude moci **vytvořit vlastní vstup**:
-     - Buď náhodný (od 1 do n), nebo přesný input podle jeho přání.
+4. ~~**Možnost vlastního inputu**~~:
+   - ~~Uživatel bude moci **vytvořit vlastní vstup**~~:
+     - ~~Buď náhodný (od 1 do n), nebo přesný input podle jeho přání~~.
 
-5. **Speciální testovací případy**:
-   - **Schody**: Pole obsahující málo různých čísel, která se opakují.
-   - **Opačně seřazené** a **skoro seřazené** pole, kde se ukáže v čem jaký algoritmus vyniká.
+5. ~~**Speciální testovací případy**~~:
+   - ~~**Schody**: Pole obsahující málo různých čísel, která se opakují~~.
+   - ~~**Opačně seřazené** a **skoro seřazené** pole, kde se ukáže v čem jaký algoritmus vyniká~~.
 
 6. **Ikonka u výběru algoritmu**:
    - Někam přidám malou ikonku, která bude po najetí vysvětlovat algoritmus slovně a obsahovat informace o **časové** a **paměťové složitosti**.
