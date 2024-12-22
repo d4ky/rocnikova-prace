@@ -1,7 +1,7 @@
 # Ročníková práce
 
 # FIXNOUT HEAP SORT!!! OMYLEM JSEM IMPLEMENTOVAL N^2!!!!!!!!!!!!!
-
+# FIXNOUT SCRAMBLE BUTTON U QUICKSORTU
 ## Složky:
 
 - **`old-one`**: Obsahuje mou první špatnou experimentální implementaci této aplikace (má první práce s WPF). Tento program už nemá nic navíc.
