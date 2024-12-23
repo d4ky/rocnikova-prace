@@ -69,7 +69,7 @@ namespace final_real_real_rocnikovka2.Algorithms
 
                     Boxes[j].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                     
-                    await Wait(Globals.AnimationMs, j);
+                    await Animate.Wait(Globals.AnimationMs, j);
                     if (Globals.Stop) return;
                     ComparisonCount++;
                     if (Numbers[j] < Numbers[minNumberIndex])

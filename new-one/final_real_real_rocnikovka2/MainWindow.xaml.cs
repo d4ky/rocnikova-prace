@@ -58,8 +58,8 @@ namespace final_real_real_rocnikovka2
             _comparisonPage = new ComparsionPage(sortingAlgorithms);
 
 
-            MainFrame.Content = _classicSortingPage;
-            ClassicButton.Tag = "Selected";
+            MainFrame.Content = _explanatorySortingPage;
+            ExplanatoryButton.Tag = "Selected";
         }
 
         private void ClassicBtn_Click(object sender, RoutedEventArgs e)

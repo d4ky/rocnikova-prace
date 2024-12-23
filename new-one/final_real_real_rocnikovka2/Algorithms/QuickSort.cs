@@ -126,7 +126,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Boxes[i].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                     Boxes[j].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
 
-                    await Wait(Globals.AnimationMs, j);
+                    await Animate.Wait(Globals.AnimationMs, j);
                     if (Globals.Stop) return 0;
 
                     Boxes[i].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);
@@ -498,7 +498,6 @@ namespace final_real_real_rocnikovka2.Algorithms
                 newBall.AddToCanvas();
                 Canvas.SetZIndex(newBall.MainUIElement, -1);
                 GraphicElements.Add(newBall);
-
 
                 xPos += 3 * Draw.BallRadius;
             }

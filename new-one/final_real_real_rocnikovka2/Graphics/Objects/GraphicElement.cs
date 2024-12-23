@@ -17,9 +17,6 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         public double X => Canvas.GetLeft(MainUIElement);
         public double Y => Canvas.GetTop(MainUIElement);
 
-        public abstract void Update(double prevWidth, double prevHeight);
-        public abstract void Update(double prevWidth, double prevHeight, double prevBallRadius);
-
         public abstract void Delete();
 
         public abstract void AddToCanvas();

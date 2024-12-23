@@ -7,13 +7,13 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Pages\ClassicSortingPage.xaml.cs">
+    <Compile Update="Pages\VisualizePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pages\ComparsionPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\ExplanatorySortingPage.xaml.cs">
+    <Compile Update="Pages\LearnPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -21,13 +21,13 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ClassicSortingPage.xaml">
+    <Page Update="Pages\VisualizePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\ComparsionPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ExplanatorySortingPage.xaml">
+    <Page Update="Pages\LearnPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Resources\Styles.xaml">

@@ -51,14 +51,6 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
         {
             MainCanvas.Children.Add(MainUIElement);
         }
-        public override void Update(double prevWidth, double prevHeight)
-        {
-            throw new NotImplementedException();
-        }
-        public override void Update(double prevWidth, double prevHeight, double prevBallRadius)
-        {
-            return;
-        }
         public override void Delete()
         {
             MainCanvas.Children.Remove(MainUIElement);

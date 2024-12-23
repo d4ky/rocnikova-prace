@@ -56,7 +56,7 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             MainCanvas.Children.Add(MainUIElement);
         }
 
-        public override void Update(double prevWidth, double prevHeight)
+        public void Update(double prevWidth, double prevHeight)
         {
             double widthScale = (MainCanvas.ActualWidth / prevWidth);
             double heightScale = (MainCanvas.ActualHeight / prevHeight);
@@ -64,10 +64,6 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             this.Height *= heightScale;
 
             SetPosition(X * widthScale, Y * heightScale);
-        }
-        public override void Update(double prevWidth, double prevHeight, double prevBallRadius)
-        {
-            return;
         }
 
         public override void Delete()

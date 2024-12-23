@@ -23,21 +23,20 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         }
         public static void UpdateBallRadius(SortingAlgorithm? sortingAlgorithm, int n, Canvas canvas)
         {
-            //switch case
-            if (sortingAlgorithm == null || sortingAlgorithm is BubbleSort || sortingAlgorithm is SelectionSort || sortingAlgorithm is InsertionSort)
+            switch (sortingAlgorithm)
             {
-                BallRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / 6);
-            }
-            else if(sortingAlgorithm is HeapSort)
-            {
-                BallRadius = Math.Min(canvas.ActualWidth / ((3 * 2 * Math.Pow(2, Math.Ceiling(Math.Log2(n + 1)) - 1)) + 1), canvas.ActualHeight / (2 * Math.Ceiling(Math.Log2(n + 1)) + 2 + VerticalGap * (Math.Ceiling(Math.Log2(n + 1)) + 2)));
-            }
-            else if (sortingAlgorithm is MergeSort)
-            { 
-                ballRadius = Math.Min(canvas.ActualWidth / (6 * n), canvas.ActualHeight / (VerticalGap * (2 * Math.Ceiling(Math.Log2(n)) + 2) + 2 * (2 * Math.Ceiling(Math.Log2(n)) + 1)));
-            } else if (sortingAlgorithm is QuickSort)
-            {
-                ballRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / (16 + VerticalGap));
+                case HeapSort:
+                    BallRadius = Math.Min(canvas.ActualWidth / ((3 * 2 * Math.Pow(2, Math.Ceiling(Math.Log2(n + 1)) - 1)) + 1), canvas.ActualHeight / (2 * Math.Ceiling(Math.Log2(n + 1)) + 2 + VerticalGap * (Math.Ceiling(Math.Log2(n + 1)) + 2)));
+                    break;
+                case MergeSort:
+                    BallRadius = Math.Min(canvas.ActualWidth / (6 * n), canvas.ActualHeight / (VerticalGap * (2 * Math.Ceiling(Math.Log2(n)) + 2) + 2 * (2 * Math.Ceiling(Math.Log2(n)) + 1)));
+                    break;
+                case QuickSort:
+                    BallRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / (16 + VerticalGap));
+                    break;
+                default:
+                    BallRadius = Math.Min(canvas.ActualWidth / (3 * n + 1), canvas.ActualHeight / 6);
+                    break;
             }
         }
 

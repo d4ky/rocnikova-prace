@@ -136,7 +136,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                     Boxes[firstRight].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                     Boxes[index].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
 
-                    await Wait(Globals.AnimationMs, index);
+                    await Animate.Wait(Globals.AnimationMs, index);
                     if (Globals.Stop) return;
 
                     Boxes[firstRight].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);

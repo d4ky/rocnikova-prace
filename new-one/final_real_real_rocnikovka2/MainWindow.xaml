@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:final_real_real_rocnikovka2"
         mc:Ignorable="d"
-        Title="Sorting Algorithms" Height="650" Width="1200" 
+        Title="Vizualizace třídících algoritmů" Height="650" Width="1200" 
         MinHeight="650" MinWidth="1200"
         WindowStartupLocation="CenterScreen"
         Background="#2D2F34">

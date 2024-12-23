@@ -86,7 +86,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                 Boxes[i].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                 SwapCount++;
 
-                await Wait(Globals.AnimationMs, i);
+                await Animate.Wait(Globals.AnimationMs, i);
                 if (Globals.Stop) return;
 
                 await Heapify(i, 0);
@@ -122,7 +122,7 @@ namespace final_real_real_rocnikovka2.Algorithms
                 Boxes[largest].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
                 Boxes[i].ChangeColor(ColorPalette.SELECTED_BAR_FILL);
 
-                await Wait(Globals.AnimationMs, i);
+                await Animate.Wait(Globals.AnimationMs, i);
                 if (Globals.Stop) return;
 
                 Boxes[largest].ChangeColor(ColorPalette.DEFAULT_BAR_FILL);

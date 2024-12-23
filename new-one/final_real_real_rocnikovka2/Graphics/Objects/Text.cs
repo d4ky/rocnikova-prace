@@ -74,21 +74,6 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             MainCanvas.Children.Add(MainUIElement);
         }
 
-        public override void Update(double prevWidth, double prevHeight)
-        {
-            return;
-        }
-        public override void Update(double prevWidth, double prevHeight, double prevBallRadius)
-        {
-            // DOBRY NO ZADNY VYPOCET MI NEVYCHAZI, OD TED BUDU VSUDE DAVAT JEN PRUHLEDNE KOULE S TEXTEM UVNITR
-            double widthScale = (MainCanvas.ActualWidth / prevWidth);
-            double heightScale = (MainCanvas.ActualHeight / prevHeight);
-
-
-            this.FontSize =  Draw.BallRadius / 3 * 2;
-
-            SetPosition(X * widthScale , (Y + prevBallRadius) * heightScale - Draw.BallRadius);
-        }
         public override void Delete()
         {
             MainCanvas.Children.Remove(MainUIElement);

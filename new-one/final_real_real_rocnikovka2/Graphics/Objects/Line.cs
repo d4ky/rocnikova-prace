@@ -77,14 +77,5 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             throw new NotImplementedException();
         }
 
-        public override void Update(double prevWidth, double prevHeight)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update(double prevWidth, double prevHeight, double prevBallRadius)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

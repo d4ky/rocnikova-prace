@@ -24,7 +24,15 @@ namespace final_real_real_rocnikovka2.Graphics.Rendering
         {
             AnimationStoryboard = new Storyboard();
         }
-
+        public static Task Wait(int delay, int iteratorNumber)
+        {
+            if (delay > 14) return Task.Delay(delay);
+            else
+            {
+                if (iteratorNumber % (15 - delay) == 0 || Globals.MultiIsChecked) return Task.Delay(1); // Globals.MulitIsChecked protoze jinak se mohou algoritmy zkazit, kdyz jich jede vic najednou a skippuji delay
+                else return Task.CompletedTask;
+            }
+        }
 
         public static void AnimationRun()
         {

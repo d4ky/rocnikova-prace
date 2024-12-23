@@ -74,23 +74,6 @@ namespace final_real_real_rocnikovka2.Graphics.Objects
             BallText?.SetPosition(x + Draw.BallRadius - BallText.TextWidth / 2, y + Draw.BallRadius - BallText.TextHeight / 2);
         }
 
-        public override void Update(double prevWidth, double prevHeight)
-        {
-            return;
-        }
-        public override void Update(double prevWidth, double prevHeight, double prevBallRadius)
-        {
-            return;
-            //BallText?.Update(prevWidth, prevHeight, prevBallRadius); // tohle jen scaluje font
-            //double widthScale = MainCanvas.ActualWidth / prevWidth;
-            //double heightScale = MainCanvas.ActualHeight / prevHeight;
-
-            //this.StrokeThickness = 0.1 * Draw.BallRadius;
-
-            //this.Width = 2 * Draw.BallRadius;
-            //this.Height = 2 * Draw.BallRadius;
-            //SetPosition(X * widthScale, (Y + prevBallRadius) * heightScale - Draw.BallRadius); // nastavi pozici obojiho
-        }
 
         public override void Delete()
         {
