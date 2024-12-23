@@ -1,7 +1,7 @@
 # Ročníková práce
 
 # FIXNOUT HEAP SORT!!! OMYLEM JSEM IMPLEMENTOVAL N^2!!!!!!!!!!!!!
-# FIXNOUT SCRAMBLE BUTTON U QUICKSORTU
+
 ## Složky:
 
 - **`old-one`**: Obsahuje mou první špatnou experimentální implementaci této aplikace (má první práce s WPF). Tento program už nemá nic navíc.
@@ -40,8 +40,8 @@
 9. ~~**Auto Step Button**~~:
    - ~~Upravím tlačítko **Auto Step**, aby jasně ukázalo, zda je zapnuté nebo vypnuté~~.
 
-10. **Přepis Settings na Menu**:
-    - Přejmenuji **Settings** na **Menu**, protože to je menu a ne nastavení ☹️.
+10. **~~Přepis Settings na Menu~~**:
+    - ~~Přejmenuji **Settings** na **Menu**, protože to je menu a ne nastavení ☹️~~.
 
 11. **Ikonka v levém horním rohu**:
     - Změním **ikonku** v levém horním rohu 😥.
