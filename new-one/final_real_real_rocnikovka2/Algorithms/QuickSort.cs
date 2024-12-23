@@ -474,13 +474,6 @@ namespace final_real_real_rocnikovka2.Algorithms
                     break;
             }
         }
-        private int CountLesserElements(List<Ball> sublist)
-        {
-            int lastValue = int.Parse(sublist.Last().GetText());
-            int count = sublist.Count(item => int.Parse(item.GetText()) < lastValue);
-
-            return count;
-        }
 
         public override void OnSelect(List<int> numbers, List<Ball> balls)
         {
@@ -501,8 +494,6 @@ namespace final_real_real_rocnikovka2.Algorithms
 
                 xPos += 3 * Draw.BallRadius;
             }
-
-
         }
 
     }

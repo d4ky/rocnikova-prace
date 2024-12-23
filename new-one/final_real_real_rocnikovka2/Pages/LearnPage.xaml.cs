@@ -100,6 +100,9 @@ namespace final_real_real_rocnikovka2.Pages
 
         private async void ResetBtn_Click(object sender, RoutedEventArgs e)
         {
+            AutoStepButton.Content = "Auto Step: OFF";
+            AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
+            IsAutoStepping = false;
             GraphicElements.ForEach(gE => gE.Delete());
             GraphicElements.Clear();
             Animate.AnimationSkip();
@@ -116,9 +119,7 @@ namespace final_real_real_rocnikovka2.Pages
             if (SelectedAlgorithm == (SortingAlgorithm)AlgorithmComboBox.SelectedItem)
                 SelectedAlgorithm?.OnSelect(Numbers, Balls);
             Draw.ChangeColorForAll(Balls, ColorPalette.DEFAULT_FILL, ColorPalette.DEFAULT_STROKE, false);
-            AutoStepButton.Content = "Auto Step: OFF";
-            AutoStepButton.Foreground = new SolidColorBrush(Colors.Red);
-            IsAutoStepping = false;
+            
         }
 
         private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -173,7 +174,6 @@ namespace final_real_real_rocnikovka2.Pages
 
         private void ScrambleBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (IsAutoStepping) return;
             Random random = new Random();
             int n = Numbers.Count;
 
@@ -189,7 +189,7 @@ namespace final_real_real_rocnikovka2.Pages
 
                 Draw.SwapXPos(Balls[i], Balls[j]);
             }
-            OnAlgorithmComboBoxSelectionChanged(null, null);
+            ResetBtn_Click(null, null);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
